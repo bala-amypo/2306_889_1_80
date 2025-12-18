@@ -20,7 +20,7 @@ public class StudentService {
         return student;
     }
 
- 
+    
     public List<StudentEntity> getData() {
         return new ArrayList<>(studentMap.values());
     }
@@ -30,7 +30,7 @@ public class StudentService {
         return studentMap.get(id);
     }
 
-   
+  
     public StudentEntity update(int id, StudentEntity student) {
         studentMap.put(id, student);
         return student;
