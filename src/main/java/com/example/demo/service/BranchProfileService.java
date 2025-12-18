@@ -7,31 +7,31 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
-import com.example.demo.entity.StudentEntity;
+import com.example.demo.entity.BranchProfile;
 
 @Service
-public class StudentService {
+public class BranchProfileService {
 
-    private Map<Integer, StudentEntity> studentMap = new HashMap<>();
+    private Map<Integer, BranchProfile> studentMap = new HashMap<>();
 
    
-    public StudentEntity saveData(StudentEntity student) {
+    public BranchProfile saveData(BranchProfile student) {
         studentMap.put(student.getId(), student);
         return student;
     }
 
     
-    public List<StudentEntity> getData() {
+    public List<BranchProfile> getData() {
         return new ArrayList<>(studentMap.values());
     }
 
    
-    public StudentEntity getById(int id) {
+    public BranchProfile getById(int id) {
         return studentMap.get(id);
     }
 
   
-    public StudentEntity update(int id, StudentEntity student) {
+    public BranchProfile update(int id, BranchProfile) {
         studentMap.put(id, student);
         return student;
     }
