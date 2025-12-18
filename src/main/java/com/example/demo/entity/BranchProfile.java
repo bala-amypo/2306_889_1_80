@@ -3,10 +3,12 @@ package com.example.demo.entity;
 import java.time.LocalDate;
 
 public class Studententity {
-    private  int id;
-    private  String name;
-    private  LocalDate dob;
-    private  float cgpa;
+    private  Long id;
+    private  String breanchCode;
+    private  String BreanchName;
+    private  String contactEmail;
+    private LocalDataTime lastSyncAT;
+    private Boolean active;
 
     public Studententity(float cgpa, LocalDate dob, int id, String name) {
         this.cgpa = cgpa;
