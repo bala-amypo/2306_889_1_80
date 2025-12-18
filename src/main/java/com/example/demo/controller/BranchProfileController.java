@@ -11,42 +11,42 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.demo.entity.StudentEntity;
-import com.example.demo.service.StudentService;
+import com.example.demo.entity.BranchProfile;
+import com.example.demo.service.BranchProfileService;
 
 @RestController
-public class StudentController {
+public class BranchProfileController {
 
     @Autowired
-    private StudentService studentService;
+    private BranchProfileService studentService;
 
-    // CREATE
+   
     @PostMapping("/students")
-    public StudentEntity saveStudent(@RequestBody StudentEntity student) {
+    public BranchProfile saveStudent(@RequestBody BranchProfile student) {
         return studentService.saveData(student);
     }
 
-    // READ ALL
-    @GetMapping("/students")
-    public List<StudentEntity> getAllStudents() {
+   
+ @GetMapping("/students")
+    public List<BranchProfile> getAllStudents() {
         return studentService.getData();
     }
 
-    // READ BY ID
+   
     @GetMapping("/students/{id}")
-    public StudentEntity getStudentById(@PathVariable int id) {
+    public BranchProfile getStudentById(@PathVariable int id) {
         return studentService.getById(id);
     }
 
-    // UPDATE
+   
     @PutMapping("/students/{id}")
-    public StudentEntity updateStudent(
+    public BranchProfile updateStudent(
             @PathVariable int id,
-            @RequestBody StudentEntity student) {
+            @RequestBody BranchProfile student) {
         return studentService.update(id, student);
     }
 
-    // DELETE
+ 
     @DeleteMapping("/students/{id}")
     public String deleteStudent(@PathVariable int id) {
         studentService.delete(id);
