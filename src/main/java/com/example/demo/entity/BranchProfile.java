@@ -11,7 +11,7 @@ public class BranchProfile {
     private LocalDateTime lastSyncAt;
     private Boolean active;
 
-    // No-arg constructor
+   
     public BranchProfile() {
     }
 
@@ -26,7 +26,7 @@ public class BranchProfile {
         this.active = active;
     }
 
-    // Getters and Setters
+
     public Long getId() {
         return id;
     }
