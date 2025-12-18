@@ -1,78 +1,74 @@
 package com.example.demo.entity;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-public class BranchProfile {
-   
-
-    private Long id;
-    private String branchCode;
-    private String branchName;
-    private String contactEmail;
-    private LocalDateTime lastSyncAt;
-    private Boolean active;
-
-   
-    public BranchProfile() {
-    }
-
-    // Parameterized constructor
-    public BranchProfile(Long id, String branchCode, String branchName,
-                         String contactEmail, LocalDateTime lastSyncAt, Boolean active) {
-        this.id = id;
-        this.branchCode = branchCode;
-        this.branchName = branchName;
-        this.contactEmail = contactEmail;
-        this.lastSyncAt = lastSyncAt;
-        this.active = active;
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getBranchCode() {
-        return branchCode;
-    }
-
-    public void setBranchCode(String branchCode) {
-        this.branchCode = branchCode;
-    }
-
-    public String getBranchName() {
-        return branchName;
-    }
-
-    public void setBranchName(String branchName) {
-        this.branchName = branchName;
-    }
-
-    public String getContactEmail() {
-        return contactEmail;
-    }
-
-    public void setContactEmail(String contactEmail) {
-        this.contactEmail = contactEmail;
-    }
-
-    public LocalDateTime getLastSyncAt() {
-        return lastSyncAt;
-    }
-
-    public void setLastSyncAt(LocalDateTime lastSyncAt) {
-        this.lastSyncAt = lastSyncAt;
-    }
-
-    public Boolean getActive() {
-        return active;
-    }
-
-    public void setActive(Boolean active) {
-        this.active = active;
-    }
+public class AcademicEvent {
+     private long branchd;
+  private String title;
+  private String evenType;
+  private LocalDate startData;
+  private LocalDate ebdData;
+  private String location;
+  private String description;
+  private LocalDateTime submittedAt;
+  public AcademicEvent(long branchd, String title, String evenType, LocalDate startData, LocalDate ebdData,
+        String location, String description, LocalDateTime submittedAt) {
+    this.branchd = branchd;
+    this.title = title;
+    this.evenType = evenType;
+    this.startData = startData;
+    this.ebdData = ebdData;
+    this.location = location;
+    this.description = description;
+    this.submittedAt = submittedAt;
+  }
+  public long getBranchd() {
+    return branchd;
+  }
+  public void setBranchd(long branchd) {
+    this.branchd = branchd;
+  }
+  public String getTitle() {
+    return title;
+  }
+  public void setTitle(String title) {
+    this.title = title;
+  }
+  public String getEvenType() {
+    return evenType;
+  }
+  public void setEvenType(String evenType) {
+    this.evenType = evenType;
+  }
+  public LocalDate getStartData() {
+    return startData;
+  }
+  public void setStartData(LocalDate startData) {
+    this.startData = startData;
+  }
+  public LocalDate getEbdData() {
+    return ebdData;
+  }
+  public void setEbdData(LocalDate ebdData) {
+    this.ebdData = ebdData;
+  }
+  public String getLocation() {
+    return location;
+  }
+  public void setLocation(String location) {
+    this.location = location;
+  }
+  public String getDescription() {
+    return description;
+  }
+  public void setDescription(String description) {
+    this.description = description;
+  }
+  public LocalDateTime getSubmittedAt() {
+    return submittedAt;
+  }
+  public void setSubmittedAt(LocalDateTime submittedAt) {
+    this.submittedAt = submittedAt;
+  }
 }
