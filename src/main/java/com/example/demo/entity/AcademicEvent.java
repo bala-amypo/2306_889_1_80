@@ -3,9 +3,9 @@ public class AcademicEvent{
   private long branchd;
   private String title;
   private String evenType;
-  private LocalData startData;
-  private LocalData ebdData;
+  private LocalDate startData;
+  private LocalDate ebdData;
   private String location;
   private String description;
-  private LocalDataTime submittedAt;
+  private LocalDateTime submittedAt;
 }
