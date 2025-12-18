@@ -2,7 +2,7 @@ package com.example.demo.entity;
 
 import java.time.LocalDate;
 
-public class Studententity {
+public class BrachProfile {
     private  Long id;
     private  String breanchCode;
     private  String BreanchName;
@@ -10,34 +10,38 @@ public class Studententity {
     private LocalDataTime lastSyncAT;
     private Boolean active;
 
-    public Studententity(float cgpa, LocalDate dob, int id, String name) {
+    public BrachProfile(float cgpa, LocalDate dob, int id, String name) {
         this.cgpa = cgpa;
         this.dob = dob;
         this.id = id;
         this.name = name;
     }
 
-    public Studententity() {
+    public BrachProfile() {
     }
     
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
-    public void setId(int id) {
+     public void setId(Long id) {
         this.id = id;
     }
 
-
-    public void setDob(LocalDate dob) {
-        this.dob = dob;
+    public void setbreanchCode(String breanchCode) {
+        this.breanchCode = breanchCode;
     }
 
 
-    public void setCgpa(float cgpa) {
-        this.cgpa = cgpa;
+   
+
+
+    public void setBreanchName(String BreanchName) {
+        this.BreanchName = BreanchName;
+    }
+
+
+    public void setcontactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
+    public void setlastSyncAT(LocalDataTime lastSyncAT) {
+        this.lastSyncAT = contactEmail;
     }
 
 
