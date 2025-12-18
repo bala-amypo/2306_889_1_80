@@ -1,68 +1,76 @@
 package com.example.demo.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-public class BrachProfile {
-    private  Long id;
-    private  String breanchCode;
-    private  String BreanchName;
-    private  String contactEmail;
-    private LocalDataTime lastSyncAT;
+public class BranchProfile {
+
+    private Long id;
+    private String branchCode;
+    private String branchName;
+    private String contactEmail;
+    private LocalDateTime lastSyncAt;
     private Boolean active;
 
-    public BrachProfile(float cgpa, LocalDate dob, int id, String name) {
-        this.cgpa = cgpa;
-        this.dob = dob;
-        this.id = id;
-        this.name = name;
+    public BranchProfile() {
     }
-
-    public BrachProfile() {
-    }
-    
-     public void setId(Long id) {
-        this.id = id;
-    }
-
-    public void setbreanchCode(String breanchCode) {
-        this.breanchCode = breanchCode;
-    }
-
 
    
-
-
-    public void setBreanchName(String BreanchName) {
-        this.BreanchName = BreanchName;
-    }
-
-
-    public void setcontactEmail(String contactEmail) {
+    public BranchProfile(Long id, String branchCode, String branchName,
+                         String contactEmail, LocalDateTime lastSyncAt, Boolean active) {
+        this.id = id;
+        this.branchCode = branchCode;
+        this.branchName = branchName;
         this.contactEmail = contactEmail;
-    }
-    public void setlastSyncAT(LocalDataTime lastSyncAT) {
-        this.lastSyncAT = lastSyncAT;
-    }
-     public void setactive(Boolean active) {
+        this.lastSyncAt = lastSyncAt;
         this.active = active;
     }
-    
-    
 
-
-    public String getName() {
-        return name;
-    }
-
-    public int getId() {
+    // Getters and Setters
+    public Long getId() {
         return id;
     }
 
-    public LocalDate getDob() {
-        return dob;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public float getCgpa() {
-        return cgpa;
+    public String getBranchCode() {
+        return branchCode;
+    }
+
+    public void setBranchCode(String branchCode) {
+        this.branchCode = branchCode;
+    }
+
+    public String getBranchName() {
+        return branchName;
+    }
+
+    public void setBranchName(String branchName) {
+        this.branchName = branchName;
+    }
+
+    public String getContactEmail() {
+        return contactEmail;
+    }
+
+    public void setContactEmail(String contactEmail) {
+        this.contactEmail = contactEmail;
+    }
+
+    public LocalDateTime getLastSyncAt() {
+        return lastSyncAt;
+    }
+
+    public void setLastSyncAt(LocalDateTime lastSyncAt) {
+        this.lastSyncAt = lastSyncAt;
+    }
+
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
     }
 }
