@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import java.time.LocalDateTime;
 
 public class BranchProfile {
+    @Id
+    @Column(unique=true)
 
     private Long id;
     private String branchCode;
