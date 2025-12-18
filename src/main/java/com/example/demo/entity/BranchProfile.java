@@ -11,10 +11,11 @@ public class BranchProfile {
     private LocalDateTime lastSyncAt;
     private Boolean active;
 
+    // No-arg constructor
     public BranchProfile() {
     }
 
-   
+    // Parameterized constructor
     public BranchProfile(Long id, String branchCode, String branchName,
                          String contactEmail, LocalDateTime lastSyncAt, Boolean active) {
         this.id = id;
