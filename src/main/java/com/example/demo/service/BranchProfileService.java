@@ -12,32 +12,32 @@ import com.example.demo.entity.BranchProfile;
 @Service
 public class BranchProfileService {
 
-    private Map<Integer, BranchProfile> studentMap = new HashMap<>();
+    private Map<Long, BranchProfile> branchMap = new HashMap<>();
 
-   
-    public BranchProfile saveData(BranchProfile student) {
-        studentMap.put(student.getId(), student);
-        return student;
+    // CREATE
+    public BranchProfile saveData(BranchProfile branchProfile) {
+        branchMap.put(branchProfile.getId(), branchProfile);
+        return branchProfile;
     }
 
-    
+    // READ ALL
     public List<BranchProfile> getData() {
-        return new ArrayList<>(studentMap.values());
+        return new ArrayList<>(branchMap.values());
     }
 
-   
-    public BranchProfile getById(int id) {
-        return studentMap.get(id);
+    // READ BY ID
+    public BranchProfile getById(Long id) {
+        return branchMap.get(id);
     }
 
-  
-    public BranchProfile update(int id, BranchProfile) {
-        studentMap.put(id, student);
-        return student;
+    // UPDATE
+    public BranchProfile update(Long id, BranchProfile branchProfile) {
+        branchMap.put(id, branchProfile);
+        return branchProfile;
     }
 
-   
-    public void delete(int id) {
-        studentMap.remove(id);
+    // DELETE
+    public void delete(Long id) {
+        branchMap.remove(id);
     }
 }
