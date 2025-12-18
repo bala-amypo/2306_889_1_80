@@ -41,8 +41,13 @@ public class BrachProfile {
         this.contactEmail = contactEmail;
     }
     public void setlastSyncAT(LocalDataTime lastSyncAT) {
-        this.lastSyncAT = contactEmail;
+        this.lastSyncAT = lastSyncAT;
     }
+     public void setactive(Boolean active) {
+        this.active = active;
+    }
+    
+    
 
 
     public String getName() {
