@@ -1,1 +1,4 @@
-public class EventMer
+public class EventMergeRecord{
+    private String sourceEventIds;
+    private
+}
