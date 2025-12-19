@@ -2,5 +2,6 @@ public class EventMergeRecord{
     private String sourceEventIds;
     private String merged;
     private LocalDate mergedStartDate;
-    private LocalDateTime
+    private LocalDateTime detectedAt;
+    private Boolean resolved;
 }
