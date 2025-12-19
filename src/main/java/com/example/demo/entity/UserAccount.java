@@ -5,5 +5,6 @@ public class UserAccount{
     private String email;
     private String password;
     private String role;
-    private Stringdepartment
+    private String department;
+    private LocalDateTime createdAt;
 }
