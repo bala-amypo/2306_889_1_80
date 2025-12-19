@@ -9,7 +9,6 @@ import jakarta.persistence.Column;
 @Entity
 public class ClashRecord {
     @Id
-    @Column(unique=true)
     private Long id;
     private  Long eventAId;
     private Long eventBId;
