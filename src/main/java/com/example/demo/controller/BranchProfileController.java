@@ -1,50 +1,31 @@
-package com.example.demo.controller;
-
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.*;
-
-import com.example.demo.entity.BranchProfile;
-import com.example.demo.service.BranchProfileService;
-
 @RestController
-@RequestMapping("/branch")
+@RequestMapping("/branches")
 public class BranchProfileController {
 
-    @Autowired
-    private BranchProfileService service;
+    private final BranchProfileService service;
 
- 
-    @PostMapping("/post")
-    public BranchProfile save(@RequestBody BranchProfile branchProfile) {
-        return service.saveData(branchProfile);
+    public BranchProfileController(BranchProfileService service) {
+        this.service = service;
     }
 
-   
-    @GetMapping("/get")
+    @PostMapping
+    public BranchProfile create(@RequestBody BranchProfile branch) {
+        return service.createBranch(branch);
+    }
+
+    @GetMapping
     public List<BranchProfile> getAll() {
-        return service.getData();
+        return service.getAllBranches();
     }
 
-    
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     public BranchProfile getById(@PathVariable Long id) {
-        return service.getById(id);
+        return service.getBranchById(id);
     }
 
-    
-    @PutMapping("/update/{id}")
-    public BranchProfile update(
-            @PathVariable Long id,
-            @RequestBody BranchProfile branchProfile) {
-        return service.update(id, branchProfile);
-    }
-
-   
-    @DeleteMapping("/delete/{id}")
-    public String delete(@PathVariable Long id) {
-        service.delete(id);
-        return "Branch deleted successfully";
+    @PutMapping("/{id}/status")
+    public BranchProfile updateStatus(@PathVariable Long id,
+                                      @RequestParam boolean active) {
+        return service.updateBranchStatus(id, active);
     }
 }

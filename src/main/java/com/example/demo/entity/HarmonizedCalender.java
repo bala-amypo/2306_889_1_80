@@ -1,12 +1,10 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
-import jakarta.validation.ValidationException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+
+import jakarta.persistence.*;
 
 @Entity
-@Table(name = "harmonized_calendars")
 public class HarmonizedCalendar {
 
     @Id
@@ -14,43 +12,32 @@ public class HarmonizedCalendar {
     private Long id;
 
     private String title;
-
     private String generatedBy;
-
-    private LocalDateTime generatedAt;
-
     private LocalDate effectiveFrom;
-
     private LocalDate effectiveTo;
 
     @Lob
     private String eventsJson;
 
-    public HarmonizedCalendar() {
+    public HarmonizedCalendar() {}
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 
-    public HarmonizedCalendar(Long id, String title, String generatedBy,
-                              LocalDateTime generatedAt,
-                              LocalDate effectiveFrom,
-                              LocalDate effectiveTo,
-                              String eventsJson) {
-        this.id = id;
-        this.title = title;
+    public void setGeneratedBy(String generatedBy) {
         this.generatedBy = generatedBy;
-        this.generatedAt = generatedAt;
+    }
+
+    public void setEffectiveFrom(LocalDate effectiveFrom) {
         this.effectiveFrom = effectiveFrom;
+    }
+
+    public void setEffectiveTo(LocalDate effectiveTo) {
         this.effectiveTo = effectiveTo;
+    }
+
+    public void setEventsJson(String eventsJson) {
         this.eventsJson = eventsJson;
     }
-
-    @PrePersist
-    public void prePersist() {
-        if (effectiveFrom != null && effectiveTo != null
-                && effectiveFrom.isAfter(effectiveTo)) {
-            throw new ValidationException("effectiveFrom cannot be after effectiveTo");
-        }
-        this.generatedAt = LocalDateTime.now();
-    }
-
-   
 }
