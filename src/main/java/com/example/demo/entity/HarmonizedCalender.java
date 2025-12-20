@@ -1,10 +1,11 @@
 package com.example.demo.entity;
 
-import java.time.LocalDate;
-
 import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "harmonized_calendars")
 public class HarmonizedCalendar {
 
     @Id
@@ -13,31 +14,23 @@ public class HarmonizedCalendar {
 
     private String title;
     private String generatedBy;
+    private LocalDateTime generatedAt;
     private LocalDate effectiveFrom;
     private LocalDate effectiveTo;
 
-    @Lob
+    @Column(columnDefinition = "TEXT")
     private String eventsJson;
 
     public HarmonizedCalendar() {}
 
-    public void setTitle(String title) {
-        this.title = title;
+    @PrePersist
+    public void onCreate() {
+        this.generatedAt = LocalDateTime.now();
     }
 
-    public void setGeneratedBy(String generatedBy) {
-        this.generatedBy = generatedBy;
-    }
-
-    public void setEffectiveFrom(LocalDate effectiveFrom) {
-        this.effectiveFrom = effectiveFrom;
-    }
-
-    public void setEffectiveTo(LocalDate effectiveTo) {
-        this.effectiveTo = effectiveTo;
-    }
-
-    public void setEventsJson(String eventsJson) {
-        this.eventsJson = eventsJson;
-    }
+    public void setTitle(String title) { this.title = title; }
+    public void setGeneratedBy(String generatedBy) { this.generatedBy = generatedBy; }
+    public void setEffectiveFrom(LocalDate effectiveFrom) { this.effectiveFrom = effectiveFrom; }
+    public void setEffectiveTo(LocalDate effectiveTo) { this.effectiveTo = effectiveTo; }
+    public void setEventsJson(String eventsJson) { this.eventsJson = eventsJson; }
 }

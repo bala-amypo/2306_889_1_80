@@ -1,10 +1,11 @@
 package com.example.demo.entity;
 
-import java.time.LocalDate;
-
 import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "event_merge_records")
 public class EventMergeRecord {
 
     @Id
@@ -16,26 +17,18 @@ public class EventMergeRecord {
     private LocalDate mergedStartDate;
     private LocalDate mergedEndDate;
     private String mergeReason;
+    private LocalDateTime createdAt;
 
     public EventMergeRecord() {}
 
-    public void setSourceEventIds(String sourceEventIds) {
-        this.sourceEventIds = sourceEventIds;
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
     }
 
-    public void setMergedTitle(String mergedTitle) {
-        this.mergedTitle = mergedTitle;
-    }
-
-    public void setMergedStartDate(LocalDate mergedStartDate) {
-        this.mergedStartDate = mergedStartDate;
-    }
-
-    public void setMergedEndDate(LocalDate mergedEndDate) {
-        this.mergedEndDate = mergedEndDate;
-    }
-
-    public void setMergeReason(String mergeReason) {
-        this.mergeReason = mergeReason;
-    }
+    public void setSourceEventIds(String sourceEventIds) { this.sourceEventIds = sourceEventIds; }
+    public void setMergedTitle(String mergedTitle) { this.mergedTitle = mergedTitle; }
+    public void setMergedStartDate(LocalDate mergedStartDate) { this.mergedStartDate = mergedStartDate; }
+    public void setMergedEndDate(LocalDate mergedEndDate) { this.mergedEndDate = mergedEndDate; }
+    public void setMergeReason(String mergeReason) { this.mergeReason = mergeReason; }
 }

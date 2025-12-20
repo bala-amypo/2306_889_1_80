@@ -1,8 +1,10 @@
 package com.example.demo.entity;
 
 import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "clash_records")
 public class ClashRecord {
 
     @Id
@@ -11,32 +13,17 @@ public class ClashRecord {
 
     private Long eventAId;
     private Long eventBId;
-    private Boolean resolved;
+    private String clashType;
+    private String severity;
+    private String details;
+    private LocalDateTime detectedAt;
+    private Boolean resolved = false;
 
     public ClashRecord() {}
 
-    public Long getId() {
-        return id;
-    }
-
-    public Long getEventAId() {
-        return eventAId;
-    }
-
-    public void setEventAId(Long eventAId) {
-        this.eventAId = eventAId;
-    }
-
-    public Long getEventBId() {
-        return eventBId;
-    }
-
-    public void setEventBId(Long eventBId) {
-        this.eventBId = eventBId;
-    }
-
-    public Boolean getResolved() {
-        return resolved;
+    @PrePersist
+    public void onCreate() {
+        this.detectedAt = LocalDateTime.now();
     }
 
     public void setResolved(Boolean resolved) {
