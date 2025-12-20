@@ -1,83 +1,30 @@
-package com.example.demo.entity;
+package com.example.demo.dto;
 
-import java.time.LocalDate;
+public class ApiResponse {
 
-import jakarta.persistence.*;
+    private boolean success;
+    private String message;
+    private Object data;
 
-@Entity
-public class AcademicEvent {
+    public ApiResponse() {}
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    private Long branchId;
-    private String title;
-    private String eventType;
-    private LocalDate startDate;
-    private LocalDate endDate;
-    private String location;
-    private String description;
-
-    public AcademicEvent() {}
-
-    public Long getId() {
-        return id;
+    public ApiResponse(boolean success, String message) {
+        this.success = success;
+        this.message = message;
     }
 
-    public Long getBranchId() {
-        return branchId;
+    public ApiResponse(boolean success, String message, Object data) {
+        this.success = success;
+        this.message = message;
+        this.data = data;
     }
 
-    public void setBranchId(Long branchId) {
-        this.branchId = branchId;
-    }
+    public boolean isSuccess() { return success; }
+    public void setSuccess(boolean success) { this.success = success; }
 
-    public String getTitle() {
-        return title;
-    }
+    public String getMessage() { return message; }
+    public void setMessage(String message) { this.message = message; }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getEventType() {
-        return eventType;
-    }
-
-    public void setEventType(String eventType) {
-        this.eventType = eventType;
-    }
-
-    public LocalDate getStartDate() {
-        return startDate;
-    }
-
-    public void setStartDate(LocalDate startDate) {
-        this.startDate = startDate;
-    }
-
-    public LocalDate getEndDate() {
-        return endDate;
-    }
-
-    public void setEndDate(LocalDate endDate) {
-        this.endDate = endDate;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
-    public String getDescription() {
-        return description;
-    }
- 
-    public void setDescription(String description) {
-        this.description = description;
-    }
+    public Object getData() { return data; }
+    public void setData(Object data) { this.data = data; }
 }

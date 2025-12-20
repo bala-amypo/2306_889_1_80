@@ -1,9 +1,11 @@
 package com.example.demo.entity;
 
-import java.time.LocalDate;
 import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
+@Table(name = "academic_events")
 public class AcademicEvent {
 
     @Id
@@ -17,28 +19,22 @@ public class AcademicEvent {
     private LocalDate endDate;
     private String location;
     private String description;
+    private LocalDateTime submittedAt;
 
     public AcademicEvent() {}
 
-    public Long getId() { return id; }
-    public Long getBranchId() { return branchId; }
-    public void setBranchId(Long branchId) { this.branchId = branchId; }
-
-    public String getTitle() { return title; }
-    public void setTitle(String title) { this.title = title; }
-
-    public String getEventType() { return eventType; }
-    public void setEventType(String eventType) { this.eventType = eventType; }
+    @PrePersist
+    public void onCreate() {
+        this.submittedAt = LocalDateTime.now();
+    }
 
     public LocalDate getStartDate() { return startDate; }
-    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
-
     public LocalDate getEndDate() { return endDate; }
+
+    public void setTitle(String title) { this.title = title; }
+    public void setEventType(String eventType) { this.eventType = eventType; }
+    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
     public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
-
-    public String getLocation() { return location; }
     public void setLocation(String location) { this.location = location; }
-
-    public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 }
