@@ -1,81 +1,49 @@
 package com.example.demo.entity;
 
-import java.io.Serializable;
+import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-
 @Entity
-
-public class EventMergeRecord implements Serializable {
+@Table(name = "event_merge_records")
+public class EventMergeRecord {
 
     @Id
-    @Column(unique= true)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private String sourceEventIds;
 
-    private String merged;
-    private LocalDate mergedStartDate;
-    private LocalDateTime detectedAt;
-    private Boolean resolved;
+    private String mergedTitle;
 
-   
+    private LocalDate mergedStartDate;
+
+    private LocalDate mergedEndDate;
+
+    private String mergeReason;
+
+    private LocalDateTime createdAt;
+
     public EventMergeRecord() {
     }
 
-   
-    public EventMergeRecord(String sourceEventIds, String merged,
-            LocalDate mergedStartDate,
-            LocalDateTime detectedAt,
-            Boolean resolved) {
+    public EventMergeRecord(Long id, String sourceEventIds,
+                            String mergedTitle, LocalDate mergedStartDate,
+                            LocalDate mergedEndDate, String mergeReason,
+                            LocalDateTime createdAt) {
+        this.id = id;
         this.sourceEventIds = sourceEventIds;
-        this.merged = merged;
+        this.mergedTitle = mergedTitle;
         this.mergedStartDate = mergedStartDate;
-        this.detectedAt = detectedAt;
-        this.resolved = resolved;
+        this.mergedEndDate = mergedEndDate;
+        this.mergeReason = mergeReason;
+        this.createdAt = createdAt;
     }
 
-  
-    public String getSourceEventIds() {
-        return sourceEventIds;
-    }
-
-    public String getMerged() {
-        return merged;
-    }
-
-    public LocalDate getMergedStartDate() {
-        return mergedStartDate;
-    }
-
-    public LocalDateTime getDetectedAt() {
-        return detectedAt;
-    }
-
-    public Boolean getResolved() {
-        return resolved;
+    @PrePersist
+    public void prePersist() {
+        this.createdAt = LocalDateTime.now();
     }
 
    
-    public void setSourceEventIds(String sourceEventIds) {
-        this.sourceEventIds = sourceEventIds;
-    }
-
-    public void setMerged(String merged) {
-        this.merged = merged;
-    }
-
-    public void setMergedStartDate(LocalDate mergedStartDate) {
-        this.mergedStartDate = mergedStartDate;
-    }
-
-    public void setDetectedAt(LocalDateTime detectedAt) {
-        this.detectedAt = detectedAt;
-    }
-
-    public void setResolved(Boolean resolved) {
-        this.resolved = resolved;
-    }
 }
