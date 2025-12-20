@@ -3,7 +3,7 @@ public interface EventMergeRecordRepository extends JpaRepository<EventMergeReco
 }
 package com.example.demo.repository;
 
-import com.example.demo.entity.EventMergeReord;
+import com.example.demo.entity.EventMergeRecord;
 
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Repository;
 import java.util.List;
 
 @Repository
-public interface EventMergeReordRepository extends JpaRepository<EventMergeReord, Long> {
+public interface EventMergeRecordRepository extends JpaRepository<EventMergeRecord, Long> {
 
     List<AcademicEvent> findByEventName(String eventName);
 }
