@@ -10,19 +10,30 @@ import java.util.List;
 @RequestMapping("/api/branches")
 public class BranchProfileController {
 
-    private final BranchProfileService service;
+    private final BranchProfileService branchService;
 
-    public BranchProfileController(BranchProfileService service) {
-        this.service = service;
+    public BranchProfileController(BranchProfileService branchService) {
+        this.branchService = branchService;
     }
 
     @PostMapping
-    public BranchProfile create(@RequestBody BranchProfile branch) {
-        return service.createBranch(branch);
+    public BranchProfile createBranch(@RequestBody BranchProfile branch) {
+        return branchService.createBranch(branch);
+    }
+
+    @PutMapping("/{id}/status")
+    public BranchProfile updateStatus(@PathVariable Long id,
+                                      @RequestParam boolean active) {
+        return branchService.updateBranchStatus(id, active);
     }
 
     @GetMapping
-    public List<BranchProfile> getAll() {
-        return service.getAllBranches();
+    public List<BranchProfile> getAllBranches() {
+        return branchService.getAllBranches();
+    }
+
+    @GetMapping("/{id}")
+    public BranchProfile getById(@PathVariable Long id) {
+        return branchService.getBranchById(id);
     }
 }

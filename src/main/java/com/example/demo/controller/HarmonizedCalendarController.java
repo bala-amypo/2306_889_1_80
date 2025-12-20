@@ -1,26 +1,31 @@
-package com.example.demo.entity;
+package com.example.demo.controller;
+
+import com.example.demo.entity.HarmonizedCalendar;
+import com.example.demo.service.HarmonizedCalendarService;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
-import jakarta.persistence.*;
+import java.util.List;
 
-@Entity
-public class HarmonizedCalendar {
+@RestController
+@RequestMapping("/api/harmonized-calendars")
+public class HarmonizedCalendarController {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private final HarmonizedCalendarService calendarService;
 
-    private String title;
-    private String generatedBy;
-    private LocalDate effectiveFrom;
-    private LocalDate effectiveTo;
+    public HarmonizedCalendarController(HarmonizedCalendarService calendarService) {
+        this.calendarService = calendarService;
+    }
 
-    @Lob
-    private String eventsJson;
+    @PostMapping
+    public HarmonizedCalendar generate(@RequestBody HarmonizedCalendar calendar) {
+        return calendarService.generateCalendar(calendar);
+    }
 
-    public void setTitle(String title) { this.title = title; }
-    public void setGeneratedBy(String generatedBy) { this.generatedBy = generatedBy; }
-    public void setEffectiveFrom(LocalDate effectiveFrom) { this.effectiveFrom = effectiveFrom; }
-    public void setEffectiveTo(LocalDate effectiveTo) { this.effectiveTo = effectiveTo; }
-    public void setEventsJson(String eventsJson) { this.eventsJson = eventsJson; }
+    @GetMapping("/active")
+    public List<HarmonizedCalendar> getActive(
+            @RequestParam LocalDate from,
+            @RequestParam LocalDate to) {
+        return calendarService.getActiveCalendars(from, to);
+    }
 }
