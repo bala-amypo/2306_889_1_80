@@ -1,67 +1,107 @@
-package com.example.demo.service.impl;
+package com.example.demo.entity;
 
-import java.util.List;
+import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-import org.springframework.stereotype.Service;
+@Entity
+@Table(name = "academic_events")
+public class AcademicEvent {
 
-import com.example.demo.entity.AcademicEvent;
-import com.example.demo.exception.ResourceNotFoundException;
-import com.example.demo.exception.ValidationException;
-import com.example.demo.repository.AcademicEventRepository;
-import com.example.demo.service.AcademicEventService;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-@Service
-public class AcademicEventServiceImpl implements AcademicEventService {
+    private Long branchId;
+    private String title;
+    private String eventType;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String location;
+    private String description;
+    private LocalDateTime submittedAt;
 
-    private final AcademicEventRepository academicEventRepository;
+    public AcademicEvent() {}
 
-    public AcademicEventServiceImpl(AcademicEventRepository academicEventRepository) {
-        this.academicEventRepository = academicEventRepository;
+    public AcademicEvent(Long id, Long branchId, String title,
+                         String eventType, LocalDate startDate,
+                         LocalDate endDate, String location,
+                         String description, LocalDateTime submittedAt) {
+        this.id = id;
+        this.branchId = branchId;
+        this.title = title;
+        this.eventType = eventType;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.location = location;
+        this.description = description;
+        this.submittedAt = submittedAt;
     }
 
-    @Override
-    public AcademicEvent createEvent(AcademicEvent event) {
-
-        if (event.getStartDate().isAfter(event.getEndDate())) {
-            throw new ValidationException("startDate cannot be after endDate");
-        }
-
-        return academicEventRepository.save(event);
+    @PrePersist
+    public void prePersist() {
+        this.submittedAt = LocalDateTime.now();
     }
 
-    @Override
-    public List<AcademicEvent> getEventsByBranch(Long branchId) {
-        return academicEventRepository.findByBranchId(branchId);
+    // ✅ GETTERS & SETTERS (THIS FIXES YOUR ERRORS)
+
+    public Long getId() {
+        return id;
     }
 
-    @Override
-    public AcademicEvent updateEvent(Long id, AcademicEvent event) {
-
-        AcademicEvent existing = getEventById(id);
-
-        if (event.getStartDate().isAfter(event.getEndDate())) {
-            throw new ValidationException("startDate cannot be after endDate");
-        }
-
-        existing.setTitle(event.getTitle());
-        existing.setEventType(event.getEventType());
-        existing.setStartDate(event.getStartDate());
-        existing.setEndDate(event.getEndDate());
-        existing.setLocation(event.getLocation());
-        existing.setDescription(event.getDescription());
-
-        return academicEventRepository.save(existing);
+    public Long getBranchId() {
+        return branchId;
     }
 
-    @Override
-    public AcademicEvent getEventById(Long id) {
-        return academicEventRepository.findById(id)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Event not found"));
+    public void setBranchId(Long branchId) {
+        this.branchId = branchId;
     }
 
-    @Override
-    public List<AcademicEvent> getAllEvents() {
-        return academicEventRepository.findAll();
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getEventType() {
+        return eventType;
+    }
+
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
+    }
+
+    public LocalDate getStartDate() {
+        return startDate;
+    }
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
+    }
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
