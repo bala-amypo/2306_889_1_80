@@ -1,48 +1,83 @@
-package com.example.demo.dto;
+package com.example.demo.entity;
 
-public class ApiResponse {
+import java.time.LocalDate;
 
-    private boolean success;
-    private String message;
-    private Object data;
+import jakarta.persistence.*;
 
-    public ApiResponse() {
+@Entity
+public class AcademicEvent {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    private Long branchId;
+    private String title;
+    private String eventType;
+    private LocalDate startDate;
+    private LocalDate endDate;
+    private String location;
+    private String description;
+
+    public AcademicEvent() {}
+
+    public Long getId() {
+        return id;
     }
 
-    public ApiResponse(boolean success, String message) {
-        this.success = success;
-        this.message = message;
+    public Long getBranchId() {
+        return branchId;
     }
 
-    public ApiResponse(boolean success, String message, Object data) {
-        this.success = success;
-        this.message = message;
-        this.data = data;
+    public void setBranchId(Long branchId) {
+        this.branchId = branchId;
     }
 
-    
+    public String getTitle() {
+        return title;
+    }
 
-    public boolean isSuccess() {
-        return success;
+    public void setTitle(String title) {
+        this.title = title;
     }
-    
-    public void setSuccess(boolean success) {
-        this.success = success;
+
+    public String getEventType() {
+        return eventType;
     }
-    
-    public String getMessage() {
-        return message;
+
+    public void setEventType(String eventType) {
+        this.eventType = eventType;
     }
-    
-    public void setMessage(String message) {
-        this.message = message;
+
+    public LocalDate getStartDate() {
+        return startDate;
     }
-    
-    public Object getData() {
-        return data;
+
+    public void setStartDate(LocalDate startDate) {
+        this.startDate = startDate;
     }
-    
-    public void setData(Object data) {
-        this.data = data;
+
+    public LocalDate getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(LocalDate endDate) {
+        this.endDate = endDate;
+    }
+
+    public String getLocation() {
+        return location;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+ 
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
