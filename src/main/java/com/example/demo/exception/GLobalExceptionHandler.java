@@ -1,8 +1,8 @@
 package com.example.demo.exception;
 
-public class GlobalException extends RuntimeException {
+public class GlobalExceptionHandler extends RuntimeException {
 
-    public ResourceNotFoundException(String message) {
+    public GlobalExceptionhandler(String message) {
         super(message);
     }
 }
