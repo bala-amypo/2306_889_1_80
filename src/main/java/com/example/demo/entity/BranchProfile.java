@@ -111,16 +111,10 @@ public class BranchProfile {
     // getters and setters
 }
 
-        this.active = active;
+    
     }
 
-    @PrePersist
-    public void prePersist() {
-        this.lastSyncAt = LocalDateTime.now();
-        if (this.active == null) {
-            this.active = true;
-        }
-    }
 
-    // getters and setters
+
+    
 }
