@@ -1,28 +1,47 @@
-package com.example.demo.controller;
+package com.example.demo.entity;
 
-import com.example.demo.entity.ClashRecord;
-import com.example.demo.service.ClashRecordService;
-import org.springframework.web.bind.annotation.*;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
-import java.util.List;
+@Entity
+@Table(name = "clash_records")
+public class ClashRecord {
 
-@RestController
-@RequestMapping("/api/clashes")
-public class ClashRecordController {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private final ClashRecordService clashService;
+    private Long eventAId;
+    private Long eventBId;
+    private String clashType;
+    private String severity;
+    private String details;
+    private LocalDateTime detectedAt;
+    private Boolean resolved;
 
-    public ClashRecordController(ClashRecordService clashService) {
-        this.clashService = clashService;
+    public ClashRecord() {
     }
 
-    @GetMapping("/unresolved")
-    public List<ClashRecord> getUnresolved() {
-        return clashService.getUnresolvedClashes();
+    public ClashRecord(Long id, Long eventAId, Long eventBId,
+            String clashType, String severity,
+            String details, LocalDateTime detectedAt, Boolean resolved) {
+        this.id = id;
+        this.eventAId = eventAId;
+        this.eventBId = eventBId;
+        this.clashType = clashType;
+        this.severity = severity;
+        this.details = details;
+        this.detectedAt = detectedAt;
+        this.resolved = resolved;
     }
 
-    @PutMapping("/{id}/resolve")
-    public ClashRecord resolve(@PathVariable Long id) {
-        return clashService.resolveClash(id);
+    @PrePersist
+    public void onDetect() {
+        this.detectedAt = LocalDateTime.now();
+        if (this.resolved == null) {
+            this.resolved = false;
+        }
     }
+
+    // getters and setters
 }

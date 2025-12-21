@@ -1,31 +1,45 @@
-package com.example.demo.controller;
+package com.example.demo.entity;
 
-import com.example.demo.entity.HarmonizedCalendar;
-import com.example.demo.service.HarmonizedCalendarService;
-import org.springframework.web.bind.annotation.*;
-
+import jakarta.persistence.*;
 import java.time.LocalDate;
-import java.util.List;
+import java.time.LocalDateTime;
 
-@RestController
-@RequestMapping("/api/harmonized-calendars")
-public class HarmonizedCalendarController {
+@Entity
+@Table(name = "harmonized_calendars")
+public class HarmonizedCalendar {
 
-    private final HarmonizedCalendarService calendarService;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public HarmonizedCalendarController(HarmonizedCalendarService calendarService) {
-        this.calendarService = calendarService;
+    private String title;
+    private String generatedBy;
+    private LocalDateTime generatedAt;
+    private LocalDate effectiveFrom;
+    private LocalDate effectiveTo;
+
+    @Column(columnDefinition = "TEXT")
+    private String eventsJson;
+
+    public HarmonizedCalendar() {
     }
 
-    @PostMapping
-    public HarmonizedCalendar generate(@RequestBody HarmonizedCalendar calendar) {
-        return calendarService.generateCalendar(calendar);
+    public HarmonizedCalendar(Long id, String title, String generatedBy,
+            LocalDateTime generatedAt, LocalDate effectiveFrom,
+            LocalDate effectiveTo, String eventsJson) {
+        this.id = id;
+        this.title = title;
+        this.generatedBy = generatedBy;
+        this.generatedAt = generatedAt;
+        this.effectiveFrom = effectiveFrom;
+        this.effectiveTo = effectiveTo;
+        this.eventsJson = eventsJson;
     }
 
-    @GetMapping("/active")
-    public List<HarmonizedCalendar> getActive(
-            @RequestParam LocalDate from,
-            @RequestParam LocalDate to) {
-        return calendarService.getActiveCalendars(from, to);
+    @PrePersist
+    public void onGenerate() {
+        this.generatedAt = LocalDateTime.now();
     }
+
+    // getters and setters
 }

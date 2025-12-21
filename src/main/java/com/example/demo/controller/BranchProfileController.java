@@ -1,39 +1,51 @@
-package com.example.demo.controller;
+package com.example.demo.entity;
 
-import com.example.demo.entity.BranchProfile;
-import com.example.demo.service.BranchProfileService;
-import org.springframework.web.bind.annotation.*;
+import java.time.LocalDateTime;
 
-import java.util.List;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
-@RestController
-@RequestMapping("/api/branches")
-public class BranchProfileController {
+@Entity
+@Table(name = "branch_profiles", uniqueConstraints = {
+    @UniqueConstraint(columnNames = "branchCode")
+})
+public class BranchProfile {
 
-    private final BranchProfileService branchService;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    public BranchProfileController(BranchProfileService branchService) {
-        this.branchService = branchService;
+    private String branchCode;
+    private String branchName;
+    private String contactEmail;
+    private LocalDateTime lastSyncAt;
+    private Boolean active;
+
+    public BranchProfile() {
     }
 
-    @PostMapping
-    public BranchProfile createBranch(@RequestBody BranchProfile branch) {
-        return branchService.createBranch(branch);
+    public BranchProfile(Long id, String branchCode, String branchName,
+            String contactEmail, LocalDateTime lastSyncAt, Boolean active) {
+        this.id = id;
+        this.branchCode = branchCode;
+        this.branchName = branchName;
+        this.contactEmail = contactEmail;
+        this.lastSyncAt = lastSyncAt;
+        this.active = active;
     }
 
-    @PutMapping("/{id}/status")
-    public BranchProfile updateStatus(@PathVariable Long id,
-                                      @RequestParam boolean active) {
-        return branchService.updateBranchStatus(id, active);
+    @PrePersist
+    public void prePersist() {
+        this.lastSyncAt = LocalDateTime.now();
+        if (this.active == null) {
+            this.active = true;
+        }
     }
 
-    @GetMapping
-    public List<BranchProfile> getAllBranches() {
-        return branchService.getAllBranches();
-    }
-
-    @GetMapping("/{id}")
-    public BranchProfile getById(@PathVariable Long id) {
-        return branchService.getBranchById(id);
-    }
+    // getters and setters
 }

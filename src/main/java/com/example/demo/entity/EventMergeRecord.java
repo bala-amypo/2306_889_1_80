@@ -19,16 +19,25 @@ public class EventMergeRecord {
     private String mergeReason;
     private LocalDateTime createdAt;
 
-    public EventMergeRecord() {}
+    public EventMergeRecord() {
+    }
+
+    public EventMergeRecord(Long id, String sourceEventIds, String mergedTitle,
+            LocalDate mergedStartDate, LocalDate mergedEndDate,
+            String mergeReason, LocalDateTime createdAt) {
+        this.id = id;
+        this.sourceEventIds = sourceEventIds;
+        this.mergedTitle = mergedTitle;
+        this.mergedStartDate = mergedStartDate;
+        this.mergedEndDate = mergedEndDate;
+        this.mergeReason = mergeReason;
+        this.createdAt = createdAt;
+    }
 
     @PrePersist
     public void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
 
-    public void setSourceEventIds(String sourceEventIds) { this.sourceEventIds = sourceEventIds; }
-    public void setMergedTitle(String mergedTitle) { this.mergedTitle = mergedTitle; }
-    public void setMergedStartDate(LocalDate mergedStartDate) { this.mergedStartDate = mergedStartDate; }
-    public void setMergedEndDate(LocalDate mergedEndDate) { this.mergedEndDate = mergedEndDate; }
-    public void setMergeReason(String mergeReason) { this.mergeReason = mergeReason; }
+    // getters and setters
 }

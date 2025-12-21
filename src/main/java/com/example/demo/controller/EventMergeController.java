@@ -1,28 +1,43 @@
-package com.example.demo.controller;
+package com.example.demo.entity;
 
-import com.example.demo.entity.EventMergeRecord;
-import com.example.demo.service.EventMergeService;
-import org.springframework.web.bind.annotation.*;
+import jakarta.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 
-import java.util.List;
+@Entity
+@Table(name = "event_merge_records")
+public class EventMergeRecord {
 
-@RestController
-@RequestMapping("/api/merges")
-public class EventMergeController {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    private final EventMergeService mergeService;
+    private String sourceEventIds;
+    private String mergedTitle;
+    private LocalDate mergedStartDate;
+    private LocalDate mergedEndDate;
+    private String mergeReason;
+    private LocalDateTime createdAt;
 
-    public EventMergeController(EventMergeService mergeService) {
-        this.mergeService = mergeService;
+    public EventMergeRecord() {
     }
 
-    @PostMapping
-    public EventMergeRecord merge(@RequestBody EventMergeRecord record) {
-        return mergeService.mergeEvents(record);
+    public EventMergeRecord(Long id, String sourceEventIds, String mergedTitle,
+            LocalDate mergedStartDate, LocalDate mergedEndDate,
+            String mergeReason, LocalDateTime createdAt) {
+        this.id = id;
+        this.sourceEventIds = sourceEventIds;
+        this.mergedTitle = mergedTitle;
+        this.mergedStartDate = mergedStartDate;
+        this.mergedEndDate = mergedEndDate;
+        this.mergeReason = mergeReason;
+        this.createdAt = createdAt;
     }
 
-    @GetMapping
-    public List<EventMergeRecord> getAll() {
-        return mergeService.getAllMerges();
+    @PrePersist
+    public void onCreate() {
+        this.createdAt = LocalDateTime.now();
     }
+
+    // getters and setters
 }

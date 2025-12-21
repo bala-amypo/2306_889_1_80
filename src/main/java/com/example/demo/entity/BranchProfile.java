@@ -1,10 +1,19 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
+
 @Entity
-@Table(name = "branch_profiles", uniqueConstraints = @UniqueConstraint(columnNames = "branchCode"))
+@Table(name = "branch_profiles", uniqueConstraints = {
+    @UniqueConstraint(columnNames = "branchCode")
+})
 public class BranchProfile {
 
     @Id
@@ -15,12 +24,13 @@ public class BranchProfile {
     private String branchName;
     private String contactEmail;
     private LocalDateTime lastSyncAt;
-    private Boolean active = true;
+    private Boolean active;
 
-    public BranchProfile() {}
+    public BranchProfile() {
+    }
 
     public BranchProfile(Long id, String branchCode, String branchName,
-                         String contactEmail, LocalDateTime lastSyncAt, Boolean active) {
+            String contactEmail, LocalDateTime lastSyncAt, Boolean active) {
         this.id = id;
         this.branchCode = branchCode;
         this.branchName = branchName;
@@ -30,10 +40,12 @@ public class BranchProfile {
     }
 
     @PrePersist
-    public void onCreate() {
+    public void prePersist() {
         this.lastSyncAt = LocalDateTime.now();
+        if (this.active == null) {
+            this.active = true;
+        }
     }
 
-    public Long getId() { return id; }
-    public void setActive(Boolean active) { this.active = active; }
+    // getters and setters
 }

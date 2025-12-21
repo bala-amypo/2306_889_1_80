@@ -21,20 +21,27 @@ public class AcademicEvent {
     private String description;
     private LocalDateTime submittedAt;
 
-    public AcademicEvent() {}
+    public AcademicEvent() {
+    }
+
+    public AcademicEvent(Long id, Long branchId, String title, String eventType,
+            LocalDate startDate, LocalDate endDate,
+            String location, String description, LocalDateTime submittedAt) {
+        this.id = id;
+        this.branchId = branchId;
+        this.title = title;
+        this.eventType = eventType;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.location = location;
+        this.description = description;
+        this.submittedAt = submittedAt;
+    }
 
     @PrePersist
-    public void onCreate() {
+    public void onSubmit() {
         this.submittedAt = LocalDateTime.now();
     }
 
-    public LocalDate getStartDate() { return startDate; }
-    public LocalDate getEndDate() { return endDate; }
-
-    public void setTitle(String title) { this.title = title; }
-    public void setEventType(String eventType) { this.eventType = eventType; }
-    public void setStartDate(LocalDate startDate) { this.startDate = startDate; }
-    public void setEndDate(LocalDate endDate) { this.endDate = endDate; }
-    public void setLocation(String location) { this.location = location; }
-    public void setDescription(String description) { this.description = description; }
+    // getters and setters
 }

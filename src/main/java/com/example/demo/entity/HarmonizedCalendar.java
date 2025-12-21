@@ -21,16 +21,25 @@ public class HarmonizedCalendar {
     @Column(columnDefinition = "TEXT")
     private String eventsJson;
 
-    public HarmonizedCalendar() {}
+    public HarmonizedCalendar() {
+    }
+
+    public HarmonizedCalendar(Long id, String title, String generatedBy,
+            LocalDateTime generatedAt, LocalDate effectiveFrom,
+            LocalDate effectiveTo, String eventsJson) {
+        this.id = id;
+        this.title = title;
+        this.generatedBy = generatedBy;
+        this.generatedAt = generatedAt;
+        this.effectiveFrom = effectiveFrom;
+        this.effectiveTo = effectiveTo;
+        this.eventsJson = eventsJson;
+    }
 
     @PrePersist
-    public void onCreate() {
+    public void onGenerate() {
         this.generatedAt = LocalDateTime.now();
     }
 
-    public void setTitle(String title) { this.title = title; }
-    public void setGeneratedBy(String generatedBy) { this.generatedBy = generatedBy; }
-    public void setEffectiveFrom(LocalDate effectiveFrom) { this.effectiveFrom = effectiveFrom; }
-    public void setEffectiveTo(LocalDate effectiveTo) { this.effectiveTo = effectiveTo; }
-    public void setEventsJson(String eventsJson) { this.eventsJson = eventsJson; }
+    // getters and setters
 }
