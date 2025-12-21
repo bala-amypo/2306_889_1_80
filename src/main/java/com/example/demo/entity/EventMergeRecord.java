@@ -1,8 +1,14 @@
 package com.example.demo.entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "event_merge_records")
@@ -40,4 +46,32 @@ public class EventMergeRecord {
     }
 
     // getters and setters
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getSourceEventIds() {
+        return sourceEventIds;
+    }
+
+    public String getMergedTitle() {
+        return mergedTitle;
+    }
+
+    public LocalDate getMergedStartDate() {
+        return mergedStartDate;
+    }
+
+    public LocalDate getMergedEndDate() {
+        return mergedEndDate;
+    }
+
+    public String getMergeReason() {
+        return mergeReason;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
 }
