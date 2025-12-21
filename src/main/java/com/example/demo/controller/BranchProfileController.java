@@ -1,51 +1,44 @@
-package com.example.demo.entity;
+package com.example.demo.controller;
 
-import java.time.LocalDateTime;
+import com.example.demo.entity.BranchProfile;
+import com.example.demo.service.BranchProfileService;
+import org.springframework.web.bind.annotation.*;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import java.util.List;
 
-@Entity
-@Table(name = "branch_profiles", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "branchCode")
-})
-public class BranchProfile {
+@RestController
+@RequestMapping("/api/branches")
+public class BranchProfileController {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private final BranchProfileService branchProfileService;
 
-    private String branchCode;
-    private String branchName;
-    private String contactEmail;
-    private LocalDateTime lastSyncAt;
-    private Boolean active;
-
-    public BranchProfile() {
+    public BranchProfileController(BranchProfileService branchProfileService) {
+        this.branchProfileService = branchProfileService;
     }
 
-    public BranchProfile(Long id, String branchCode, String branchName,
-            String contactEmail, LocalDateTime lastSyncAt, Boolean active) {
-        this.id = id;
-        this.branchCode = branchCode;
-        this.branchName = branchName;
-        this.contactEmail = contactEmail;
-        this.lastSyncAt = lastSyncAt;
-        this.active = active;
+    @PostMapping
+    public BranchProfile createBranch(@RequestBody BranchProfile branch) {
+        return branchProfileService.createBranch(branch);
     }
 
-    @PrePersist
-    public void prePersist() {
-        this.lastSyncAt = LocalDateTime.now();
-        if (this.active == null) {
-            this.active = true;
-        }
+    @PutMapping("/{id}/status")
+    public BranchProfile updateStatus(@PathVariable Long id,
+                                      @RequestParam boolean active) {
+        return branchProfileService.updateBranchStatus(id, active);
     }
 
-    // getters and setters
+    @GetMapping("/{id}")
+    public BranchProfile getBranch(@PathVariable Long id) {
+        return branchProfileService.getBranchById(id);
+    }
+
+    @GetMapping
+    public List<BranchProfile> getAllBranches() {
+        return branchProfileService.getAllBranches();
+    }
+
+    @GetMapping("/lookup/{branchCode}")
+    public BranchProfile findByCode(@PathVariable String branchCode) {
+        return branchProfileService.findByBranchCode(branchCode);
+    }
 }

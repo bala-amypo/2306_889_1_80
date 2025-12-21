@@ -1,47 +1,43 @@
-package com.example.demo.entity;
+package com.example.demo.controller;
 
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import com.example.demo.entity.ClashRecord;
+import com.example.demo.service.ClashDetectionService;
+import org.springframework.web.bind.annotation.*;
 
-@Entity
-@Table(name = "clash_records")
-public class ClashRecord {
+import java.util.List;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+@RestController
+@RequestMapping("/api/clashes")
+public class ClashRecordController {
 
-    private Long eventAId;
-    private Long eventBId;
-    private String clashType;
-    private String severity;
-    private String details;
-    private LocalDateTime detectedAt;
-    private Boolean resolved;
+    private final ClashDetectionService clashDetectionService;
 
-    public ClashRecord() {
+    public ClashRecordController(ClashDetectionService clashDetectionService) {
+        this.clashDetectionService = clashDetectionService;
     }
 
-    public ClashRecord(Long id, Long eventAId, Long eventBId,
-            String clashType, String severity,
-            String details, LocalDateTime detectedAt, Boolean resolved) {
-        this.id = id;
-        this.eventAId = eventAId;
-        this.eventBId = eventBId;
-        this.clashType = clashType;
-        this.severity = severity;
-        this.details = details;
-        this.detectedAt = detectedAt;
-        this.resolved = resolved;
+    @PostMapping
+    public ClashRecord log(@RequestBody ClashRecord clash) {
+        return clashDetectionService.logClash(clash);
     }
 
-    @PrePersist
-    public void onDetect() {
-        this.detectedAt = LocalDateTime.now();
-        if (this.resolved == null) {
-            this.resolved = false;
-        }
+    @PutMapping("/{id}/resolve")
+    public ClashRecord resolve(@PathVariable Long id) {
+        return clashDetectionService.resolveClash(id);
     }
 
-    // getters and setters
+    @GetMapping("/event/{eventId}")
+    public List<ClashRecord> byEvent(@PathVariable Long eventId) {
+        return clashDetectionService.getClashesForEvent(eventId);
+    }
+
+    @GetMapping("/unresolved")
+    public List<ClashRecord> unresolved() {
+        return clashDetectionService.getUnresolvedClashes();
+    }
+
+    @GetMapping
+    public List<ClashRecord> all() {
+        return clashDetectionService.getAllClashes();
+    }
 }

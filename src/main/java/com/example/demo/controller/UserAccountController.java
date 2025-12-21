@@ -1,55 +1,28 @@
-package com.example.demo.entity;
+package com.example.demo.controller;
 
-import java.time.LocalDateTime;
+import com.example.demo.entity.UserAccount;
+import com.example.demo.service.UserAccountService;
+import org.springframework.web.bind.annotation.*;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
+import java.util.List;
 
-@Entity
-@Table(name = "user_accounts", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "email")
-})
-public class UserAccount {
+@RestController
+@RequestMapping("/auth/users")
+public class UserAccountController {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private final UserAccountService userAccountService;
 
-    private String fullName;
-
-    private String email;
-
-    private String password;
-
-    private String role;
-
-    private String department;
-
-    private LocalDateTime createdAt;
-
-    public UserAccount() {
+    public UserAccountController(UserAccountService userAccountService) {
+        this.userAccountService = userAccountService;
     }
 
-    public UserAccount(Long id, String fullName, String email, String password,
-            String role, String department, LocalDateTime createdAt) {
-        this.id = id;
-        this.fullName = fullName;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.department = department;
-        this.createdAt = createdAt;
+    @GetMapping
+    public List<UserAccount> getAllUsers() {
+        return userAccountService.getAllUsers();
     }
 
-    @PrePersist
-    public void onCreate() {
-        this.createdAt = LocalDateTime.now();
+    @GetMapping("/{id}")
+    public UserAccount getUser(@PathVariable Long id) {
+        return userAccountService.getUser(id);
     }
-
-    // getters and setters
 }
