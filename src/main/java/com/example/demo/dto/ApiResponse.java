@@ -13,4 +13,16 @@ public class ApiResponse {
     }
 
     // getters and setters
+
+    public boolean isSuccess() {
+        return success;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public Object getData() {
+        return data;
+    }
 }

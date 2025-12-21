@@ -7,6 +7,21 @@ public class RegisterRequest {
     private String password;
     private String role;
     private String department;
+    public String getName() {
+        return name;
+    }
+    public String getEmail() {
+        return email;
+    }
+    public String getPassword() {
+        return password;
+    }
+    public String getRole() {
+        return role;
+    }
+    public String getDepartment() {
+        return department;
+    }
 
     // getters and setters
 }
