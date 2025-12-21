@@ -1,32 +1,32 @@
-package com.example.demo.security;
+// package com.example.demo.security;
 
-import com.example.demo.entity.UserAccount;
-import com.example.demo.repository.UserAccountRepository;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.*;
-import org.springframework.stereotype.Service;
+// import com.example.demo.entity.UserAccount;
+// import com.example.demo.repository.UserAccountRepository;
+// import org.springframework.security.core.authority.SimpleGrantedAuthority;
+// import org.springframework.security.core.userdetails.*;
+// import org.springframework.stereotype.Service;
 
-import java.util.List;
+// import java.util.List;
 
-@Service
-public class CustomUserDetailsService implements UserDetailsService {
+// @Service
+// public class CustomUserDetailsService implements UserDetailsService {
 
-    private final UserAccountRepository userAccountRepository;
+//     private final UserAccountRepository userAccountRepository;
 
-    public CustomUserDetailsService(UserAccountRepository userAccountRepository) {
-        this.userAccountRepository = userAccountRepository;
-    }
+//     public CustomUserDetailsService(UserAccountRepository userAccountRepository) {
+//         this.userAccountRepository = userAccountRepository;
+//     }
 
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+//     @Override
+//     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        UserAccount user = userAccountRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//         UserAccount user = userAccountRepository.findByEmail(email)
+//                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-        return new User(
-                user.getEmail(),
-                user.getPassword(),
-                List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
-        );
-    }
-}
+//         return new User(
+//                 user.getEmail(),
+//                 user.getPassword(),
+//                 List.of(new SimpleGrantedAuthority("ROLE_" + user.getRole()))
+//         );
+//     }
+// }
