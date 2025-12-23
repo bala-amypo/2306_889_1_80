@@ -41,7 +41,7 @@ public class AcademicEvent {
         this.endDate = endDate;
         this.location = location;
         this.description = description;
-      ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++  this.submittedAt = submittedAt;
+      +  this.submittedAt = submittedAt;
     }
 
     @PrePersist
