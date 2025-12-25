@@ -3,7 +3,6 @@ package com.example.demo.controller;
 
 import com.example.demo.dto.ApiResponse;
 import com.example.demo.dto.LoginRequest;
-import com.example.demo.dto.LoginResponse;
 import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.UserAccount;
 import com.example.demo.security.JwtUtil;
@@ -17,6 +16,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @Tag(name = "Authentication")
 @RestController
@@ -35,26 +36,31 @@ public class AuthController {
         this.passwordEncoder = passwordEncoder;
     }
 
-    @Operation(summary = "Register a new user", description = "Public endpoint – creates a user and returns a JWT")
+    @Operation(summary = "Register a new user")
     @PostMapping("/register")
     public ResponseEntity<ApiResponse> register(@RequestBody RegisterRequest request) {
         UserAccount user = new UserAccount();
         user.setFullName(request.getName());
         user.setEmail(request.getEmail());
-        user.setPassword(request.getPassword()); // raw password – will be hashed in service
+        user.setPassword(request.getPassword());
         user.setRole(request.getRole());
         user.setDepartment(request.getDepartment());
 
         UserAccount registered = userAccountService.register(user);
-
         String token = jwtUtil.generateToken(registered.getId(), registered.getEmail(), registered.getRole());
-        LoginResponse loginResponse = new LoginResponse(token, registered.getId(), registered.getEmail(), registered.getRole());
+
+        Map<String, Object> data = Map.of(
+                "token", token,
+                "userId", registered.getId(),
+                "email", registered.getEmail(),
+                "role", registered.getRole()
+        );
 
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ApiResponse(true, "User registered successfully", loginResponse));
+                .body(new ApiResponse(true, "User registered successfully", data));
     }
 
-    @Operation(summary = "Login", description = "Public endpoint – returns a JWT on successful authentication")
+    @Operation(summary = "Login")
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest request) {
         UserAccount user = userAccountService.findByEmail(request.getEmail());
@@ -65,8 +71,14 @@ public class AuthController {
         }
 
         String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole());
-        LoginResponse loginResponse = new LoginResponse(token, user.getId(), user.getEmail(), user.getRole());
 
-        return ResponseEntity.ok(new ApiResponse(true, "Login successful", loginResponse));
+        Map<String, Object> data = Map.of(
+                "token", token,
+                "userId", user.getId(),
+                "email", user.getEmail(),
+                "role", user.getRole()
+        );
+
+        return ResponseEntity.ok(new ApiResponse(true, "Login successful", data));
     }
 }
