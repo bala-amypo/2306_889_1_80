@@ -14,40 +14,43 @@ import java.util.List;
 @Service
 public class UserAccountServiceImpl implements UserAccountService {
 
-    private final UserAccountRepository userAccountRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final UserAccountRepository repository;
+    private final PasswordEncoder encoder;
 
-    public UserAccountServiceImpl(UserAccountRepository userAccountRepository, PasswordEncoder passwordEncoder) {
-        this.userAccountRepository = userAccountRepository;
-        this.passwordEncoder = passwordEncoder;
+    public UserAccountServiceImpl(UserAccountRepository repository, PasswordEncoder encoder) {
+        this.repository = repository;
+        this.encoder = encoder;
     }
 
     @Override
     public UserAccount register(UserAccount user) {
-        if (userAccountRepository.existsByEmail(user.getEmail())) {
+        if (repository.existsByEmail(user.getEmail())) {
             throw new ValidationException("Email already in use");
         }
-        if (user.getRole() == null || user.getRole().isBlank()) {
+        if (user.getPassword().length() < 8) {
+            throw new ValidationException("Password must be at least 8 characters");
+        }
+        if (user.getRole() == null) {
             user.setRole("REVIEWER");
         }
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        return userAccountRepository.save(user);
+        user.setPassword(encoder.encode(user.getPassword()));
+        return repository.save(user);
     }
 
     @Override
     public UserAccount findByEmail(String email) {
-        return userAccountRepository.findByEmail(email)
+        return repository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     @Override
     public UserAccount getUser(Long id) {
-        return userAccountRepository.findById(id)
+        return repository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
 
     @Override
     public List<UserAccount> getAllUsers() {
-        return userAccountRepository.findAll();
+        return repository.findAll();
     }
 }
