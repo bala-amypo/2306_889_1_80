@@ -13,10 +13,9 @@ import java.io.PrintWriter;
 public class SimpleStatusServlet extends HttpServlet {
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setStatus(HttpServletResponse.SC_OK);
-        response.setContentType("text/plain");
-        PrintWriter writer = response.getWriter();
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        resp.setStatus(200);
+        PrintWriter writer = resp.getWriter();
         writer.write("Servlet Alive");
         writer.flush();
     }

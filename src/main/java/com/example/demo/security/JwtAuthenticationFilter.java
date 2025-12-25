@@ -1,5 +1,6 @@
-// src/main/java/com/example/demo/config/JwtAuthenticationFilter.java
-package com.example.demo.config;
+// src/main/java/com/example/demo/security/JwtAuthenticationFilter.java
+// (Duplicated in security, but since document places in config, this can be empty or same as config one. To match layout, copy the one from config.
+package com.example.demo.security;
 
 import com.example.demo.security.JwtUtil;
 import jakarta.servlet.FilterChain;

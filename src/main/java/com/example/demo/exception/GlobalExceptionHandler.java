@@ -1,3 +1,4 @@
+// src/main/java/com/example/demo/exception/GlobalExceptionHandler.java
 package com.example.demo.exception;
 
 import com.example.demo.dto.ApiResponse;
@@ -9,21 +10,18 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<ApiResponse> handleNotFound(ResourceNotFoundException ex) {
-        ApiResponse response = new ApiResponse(false, ex.getMessage(), null);
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }
-
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ApiResponse> handleValidation(ValidationException ex) {
-        ApiResponse response = new ApiResponse(false, ex.getMessage(), null);
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return ResponseEntity.badRequest().body(new ApiResponse(false, ex.getMessage(), null));
+    }
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<ApiResponse> handleNotFound(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ApiResponse(false, ex.getMessage(), null));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse> handleGeneric(Exception ex) {
-        ApiResponse response = new ApiResponse(false, ex.getMessage(), null);
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<ApiResponse> handleGeneral(Exception ex) {
+        return ResponseEntity.internalServerError().body(new ApiResponse(false, "An error occurred", null));
     }
 }
