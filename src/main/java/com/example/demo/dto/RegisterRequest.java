@@ -10,6 +10,7 @@ public class RegisterRequest {
 
     public RegisterRequest() {}
 
+    // Getters and Setters
     public String getName() {
         return name;
     }

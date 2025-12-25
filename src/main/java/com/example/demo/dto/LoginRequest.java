@@ -1,38 +1,18 @@
-// src/main/java/com/example/demo/dto/LoginResponse.java
+// src/main/java/com/example/demo/dto/LoginRequest.java
 package com.example.demo.dto;
 
-public class LoginResponse {
-    private String token;
-    private Long userId;
+public class LoginRequest {
     private String email;
-    private String role;
+    private String password;
 
-    public LoginResponse() {}
+    public LoginRequest() {}
 
-    public LoginResponse(String token, Long userId, String email, String role) {
-        this.token = token;
-        this.userId = userId;
+    public LoginRequest(String email, String password) {
         this.email = email;
-        this.role = role;
+        this.password = password;
     }
 
     // Getters and Setters
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public Long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(Long userId) {
-        this.userId = userId;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -41,11 +21,11 @@ public class LoginResponse {
         this.email = email;
     }
 
-    public String getRole() {
-        return role;
+    public String getPassword() {
+        return password;
     }
 
-    public void setRole(String role) {
-        this.role = role;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
