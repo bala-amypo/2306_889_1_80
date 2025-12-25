@@ -12,7 +12,7 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    // Hardcoded values to avoid dependency on application.properties
+    // Hardcoded secret and expiration - no dependency on application.properties
     private final SecretKey secretKey = Keys.hmacShaKeyFor("supersecretkey123456789012345678901234567890123456789012345678901234567890".getBytes());
     private final long expirationMillis = 86400000L; // 24 hours
 
