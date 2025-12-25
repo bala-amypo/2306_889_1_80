@@ -1,13 +1,8 @@
+// src/main/java/com/example/demo/entity/ClashRecord.java
 package com.example.demo.entity;
 
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
-
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrePersist;
-import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "clash_records")
@@ -18,19 +13,24 @@ public class ClashRecord {
     private Long id;
 
     private Long eventAId;
+
     private Long eventBId;
+
     private String clashType;
+
     private String severity;
+
     private String details;
+
     private LocalDateTime detectedAt;
-    private Boolean resolved;
 
-    public ClashRecord() {
-    }
+    private Boolean resolved = false;
 
-    public ClashRecord(Long id, Long eventAId, Long eventBId,
-            String clashType, String severity,
-            String details, LocalDateTime detectedAt, Boolean resolved) {
+    // No-arg constructor
+    public ClashRecord() {}
+
+    // Parameterized constructor
+    public ClashRecord(Long id, Long eventAId, Long eventBId, String clashType, String severity, String details, LocalDateTime detectedAt, Boolean resolved) {
         this.id = id;
         this.eventAId = eventAId;
         this.eventBId = eventBId;
@@ -42,76 +42,32 @@ public class ClashRecord {
     }
 
     @PrePersist
-    public void onDetect() {
+    protected void onCreate() {
         this.detectedAt = LocalDateTime.now();
-        if (this.resolved == null) {
-            this.resolved = false;
-        }
     }
 
-    public Long getId() {
-        return id;
-    }
+    // Getters and Setters
+    public Long getId() { return id; }
+    public void setId(Long id) { this.id = id; }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public Long getEventAId() { return eventAId; }
+    public void setEventAId(Long eventAId) { this.eventAId = eventAId; }
 
-    public Long getEventAId() {
-        return eventAId;
-    }
+    public Long getEventBId() { return eventBId; }
+    public void setEventBId(Long eventBId) { this.eventBId = eventBId; }
 
-    public void setEventAId(Long eventAId) {
-        this.eventAId = eventAId;
-    }
+    public String getClashType() { return clashType; }
+    public void setClashType(String clashType) { this.clashType = clashType; }
 
-    public Long getEventBId() {
-        return eventBId;
-    }
+    public String getSeverity() { return severity; }
+    public void setSeverity(String severity) { this.severity = severity; }
 
-    public void setEventBId(Long eventBId) {
-        this.eventBId = eventBId;
-    }
+    public String getDetails() { return details; }
+    public void setDetails(String details) { this.details = details; }
 
-    public String getClashType() {
-        return clashType;
-    }
+    public LocalDateTime getDetectedAt() { return detectedAt; }
+    public void setDetectedAt(LocalDateTime detectedAt) { this.detectedAt = detectedAt; }
 
-    public void setClashType(String clashType) {
-        this.clashType = clashType;
-    }
-
-    public String getSeverity() {
-        return severity;
-    }
-
-    public void setSeverity(String severity) {
-        this.severity = severity;
-    }
-
-    public String getDetails() {
-        return details;
-    }
-
-    public void setDetails(String details) {
-        this.details = details;
-    }
-
-    public LocalDateTime getDetectedAt() {
-        return detectedAt;
-    }
-
-    public void setDetectedAt(LocalDateTime detectedAt) {
-        this.detectedAt = detectedAt;
-    }
-
-    public Boolean getResolved() {
-        return resolved;
-    }
-
-    public void setResolved(Boolean resolved) {
-        this.resolved = resolved;
-    }
-
-    
+    public Boolean getResolved() { return resolved; }
+    public void setResolved(Boolean resolved) { this.resolved = resolved; }
 }
