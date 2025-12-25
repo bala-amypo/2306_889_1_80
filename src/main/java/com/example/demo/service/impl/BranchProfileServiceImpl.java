@@ -1,3 +1,4 @@
+// src/main/java/com/example/demo/service/impl/BranchProfileServiceImpl.java
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.BranchProfile;
@@ -24,7 +25,8 @@ public class BranchProfileServiceImpl implements BranchProfileService {
 
     @Override
     public BranchProfile updateBranchStatus(Long id, boolean active) {
-        BranchProfile branch = getBranchById(id);
+        BranchProfile branch = branchProfileRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Branch not found"));
         branch.setActive(active);
         return branchProfileRepository.save(branch);
     }

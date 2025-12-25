@@ -1,3 +1,4 @@
+// src/main/java/com/example/demo/service/impl/AcademicEventServiceImpl.java
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.AcademicEvent;
@@ -18,11 +19,16 @@ public class AcademicEventServiceImpl implements AcademicEventService {
         this.academicEventRepository = academicEventRepository;
     }
 
-    @Override
-    public AcademicEvent createEvent(AcademicEvent event) {
-        if (event.getStartDate().isAfter(event.getEndDate())) {
+    private void validateDates(AcademicEvent event) {
+        if (event.getStartDate() != null && event.getEndDate() != null
+                && event.getStartDate().isAfter(event.getEndDate())) {
             throw new ValidationException("startDate cannot be after endDate");
         }
+    }
+
+    @Override
+    public AcademicEvent createEvent(AcademicEvent event) {
+        validateDates(event);
         return academicEventRepository.save(event);
     }
 
@@ -33,19 +39,16 @@ public class AcademicEventServiceImpl implements AcademicEventService {
 
     @Override
     public AcademicEvent updateEvent(Long id, AcademicEvent event) {
-        AcademicEvent existing = getEventById(id);
-
-        if (event.getStartDate().isAfter(event.getEndDate())) {
-            throw new ValidationException("startDate cannot be after endDate");
-        }
-
+        AcademicEvent existing = academicEventRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found"));
+        validateDates(event);
+        existing.setBranchId(event.getBranchId());
         existing.setTitle(event.getTitle());
         existing.setEventType(event.getEventType());
         existing.setStartDate(event.getStartDate());
         existing.setEndDate(event.getEndDate());
         existing.setLocation(event.getLocation());
         existing.setDescription(event.getDescription());
-
         return academicEventRepository.save(existing);
     }
 

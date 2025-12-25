@@ -1,6 +1,6 @@
+// src/main/java/com/example/demo/service/impl/EventMergeServiceImpl.java
 package com.example.demo.service.impl;
 
-import com.example.demo.entity.AcademicEvent;
 import com.example.demo.entity.EventMergeRecord;
 import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.AcademicEventRepository;
@@ -8,6 +8,7 @@ import com.example.demo.repository.EventMergeRecordRepository;
 import com.example.demo.service.EventMergeService;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,24 +26,21 @@ public class EventMergeServiceImpl implements EventMergeService {
 
     @Override
     public EventMergeRecord mergeEvents(List<Long> eventIds, String reason) {
-
-        List<AcademicEvent> events = eventIds.stream()
-                .map(id -> academicEventRepository.findById(id)
-                        .orElseThrow(() -> new ResourceNotFoundException("Event not found")))
-                .toList();
+        // Validate all events exist
+        eventIds.forEach(id -> academicEventRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Event not found")));
 
         EventMergeRecord record = new EventMergeRecord();
         record.setSourceEventIds(eventIds.stream()
                 .map(String::valueOf)
                 .collect(Collectors.joining(",")));
-        record.setMergedTitle("Merged Events");
-        record.setMergedStartDate(
-                events.stream().map(AcademicEvent::getStartDate).min(java.time.LocalDate::compareTo).get()
-        );
-        record.setMergedEndDate(
-                events.stream().map(AcademicEvent::getEndDate).max(java.time.LocalDate::compareTo).get()
-        );
         record.setMergeReason(reason);
+
+        // Simple merge logic – use first event's title and dates
+        var firstEvent = academicEventRepository.findById(eventIds.get(0)).get();
+        record.setMergedTitle("Merged: " + firstEvent.getTitle());
+        record.setMergedStartDate(firstEvent.getStartDate());
+        record.setMergedEndDate(firstEvent.getEndDate());
 
         return eventMergeRecordRepository.save(record);
     }
@@ -59,7 +57,7 @@ public class EventMergeServiceImpl implements EventMergeService {
     }
 
     @Override
-    public List<EventMergeRecord> getMergeRecordsByDate(java.time.LocalDate start, java.time.LocalDate end) {
+    public List<EventMergeRecord> getMergeRecordsByDate(LocalDate start, LocalDate end) {
         return eventMergeRecordRepository.findByMergedStartDateBetween(start, end);
     }
 }
