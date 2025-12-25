@@ -4,7 +4,6 @@ package com.example.demo.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -13,14 +12,9 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    private final SecretKey secretKey;
-    private final long expirationMillis;
-
-    public JwtUtil(@Value("${jwt.secret}") String secret,
-                   @Value("${jwt.expiration}") long expirationMillis) {
-        this.secretKey = Keys.hmacShaKeyFor(secret.getBytes());
-        this.expirationMillis = expirationMillis;
-    }
+    // Hardcoded values to avoid dependency on application.properties
+    private final SecretKey secretKey = Keys.hmacShaKeyFor("supersecretkey123456789012345678901234567890123456789012345678901234567890".getBytes());
+    private final long expirationMillis = 86400000L; // 24 hours
 
     public String generateToken(Long userId, String email, String role) {
         return Jwts.builder()
