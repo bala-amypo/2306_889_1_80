@@ -1,12 +1,13 @@
 // src/main/java/com/example/demo/security/JwtUtil.java
 package com.example.demo.security;
 
-import com.example.demo.entity.UserAccount;
-import io.jsonwebtoken.*;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jws;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 
+import javax.crypto.SecretKey;
 import java.nio.charset.StandardCharsets;
-import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -14,26 +15,27 @@ import java.util.function.Function;
 
 public class JwtUtil {
 
-    private String secret;
+    private String secret = "thisisasecretkeyforjwtauthenticationatleast32characterslong"; // 32+ chars for HS512
 
-    private long expiration = 3600000L; // 1 hour
+    private long expiration = 3600000L; // 1 hour in milliseconds
 
-    public void initKey() {
-        secret = "thisisasecretkeyforjwtauthenticationatleast32characterslong";
-    }
-
-    private Key getSigningKey() {
+    private SecretKey getSigningKey() {
         byte[] keyBytes = secret.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
+    public void initKey() {
+        // You can change the secret here if needed
+        secret = "thisisasecretkeyforjwtauthenticationatleast32characterslong";
+    }
+
     public String generateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expiration))
-                .signWith(getSigningKey(), SignatureAlgorithm.HS512)
+                .claims(claims)
+                .subject(subject)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(getSigningKey())
                 .compact();
     }
 
@@ -45,7 +47,7 @@ public class JwtUtil {
         return generateToken(claims, email);
     }
 
-    public String generateTokenForUser(UserAccount ua) {
+    public String generateTokenForUser(com.example.demo.entity.UserAccount ua) {
         return generateToken(ua.getId(), ua.getEmail(), ua.getRole());
     }
 
@@ -80,17 +82,13 @@ public class JwtUtil {
     }
 
     private Claims extractAllClaims(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
-                .build()
-                .parseClaimsJws(token)
-                .getBody();
+        return parseToken(token).getPayload();
     }
 
     public Jws<Claims> parseToken(String token) {
-        return Jwts.parserBuilder()
-                .setSigningKey(getSigningKey())
+        return Jwts.parser()
+                .verifyWith(getSigningKey())
                 .build()
-                .parseClaimsJws(token);
+                .parseSignedClaims(token);
     }
 }
