@@ -11,28 +11,26 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Tag(name = "User Management")
+@Tag(name = "User Accounts")
 @RestController
-@RequestMapping("/auth")
+@RequestMapping("/auth/users")
 public class UserAccountController {
 
-    private final UserAccountService userAccountService;
+    private final UserAccountService service;
 
-    public UserAccountController(UserAccountService userAccountService) {
-        this.userAccountService = userAccountService;
+    public UserAccountController(UserAccountService service) {
+        this.service = service;
     }
 
-    @Operation(summary = "Get all users", description = "ADMIN only")
-    @GetMapping("/users")
-    public ResponseEntity<ApiResponse> getAllUsers() {
-        List<UserAccount> users = userAccountService.getAllUsers();
-        return ResponseEntity.ok(new ApiResponse(true, "Users retrieved successfully", users));
+    @Operation(summary = "Get all users")
+    @GetMapping
+    public ResponseEntity<List<UserAccount>> getAll() {
+        return ResponseEntity.ok(service.getAllUsers());
     }
 
-    @Operation(summary = "Get user by ID", description = "ADMIN only")
-    @GetMapping("/users/{id}")
-    public ResponseEntity<ApiResponse> getUser(@PathVariable Long id) {
-        UserAccount user = userAccountService.getUser(id);
-        return ResponseEntity.ok(new ApiResponse(true, "User found", user));
+    @Operation(summary = "Get user by ID")
+    @GetMapping("/{id}")
+    public ResponseEntity<UserAccount> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getUser(id));
     }
 }

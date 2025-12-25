@@ -9,8 +9,11 @@ import com.example.demo.security.JwtUtil;
 import com.example.demo.service.UserAccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -24,16 +27,16 @@ import java.util.Map;
 @RequestMapping("/auth")
 public class AuthController {
 
-    private final UserAccountService userAccountService;
-    private final JwtUtil jwtUtil;
+    private final UserAccountService service;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
 
-    public AuthController(UserAccountService userAccountService,
-                          JwtUtil jwtUtil,
-                          PasswordEncoder passwordEncoder) {
-        this.userAccountService = userAccountService;
-        this.jwtUtil = jwtUtil;
+    public AuthController(UserAccountService service, PasswordEncoder passwordEncoder, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
+        this.service = service;
         this.passwordEncoder = passwordEncoder;
+        this.jwtUtil = jwtUtil;
+        this.authenticationManager = authenticationManager;
     }
 
     @Operation(summary = "Register a new user")
@@ -45,40 +48,19 @@ public class AuthController {
         user.setPassword(request.getPassword());
         user.setRole(request.getRole());
         user.setDepartment(request.getDepartment());
-
-        UserAccount registered = userAccountService.register(user);
-        String token = jwtUtil.generateToken(registered.getId(), registered.getEmail(), registered.getRole());
-
-        Map<String, Object> data = Map.of(
-                "token", token,
-                "userId", registered.getId(),
-                "email", registered.getEmail(),
-                "role", registered.getRole()
-        );
-
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(new ApiResponse(true, "User registered successfully", data));
+        UserAccount created = service.register(user);
+        return ResponseEntity.ok(new ApiResponse(true, "User registered", created));
     }
 
-    @Operation(summary = "Login")
+    @Operation(summary = "Login user")
     @PostMapping("/login")
     public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest request) {
-        UserAccount user = userAccountService.findByEmail(request.getEmail());
-
-        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body(new ApiResponse(false, "Invalid credentials", null));
-        }
-
-        String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole());
-
-        Map<String, Object> data = Map.of(
-                "token", token,
-                "userId", user.getId(),
-                "email", user.getEmail(),
-                "role", user.getRole()
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword())
         );
-
-        return ResponseEntity.ok(new ApiResponse(true, "Login successful", data));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        UserAccount user = service.findByEmail(request.getEmail());
+        String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole());
+        return ResponseEntity.ok(new ApiResponse(true, "Login successful", Map.of("token", token, "user", user)));
     }
 }
