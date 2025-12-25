@@ -5,7 +5,6 @@ import com.example.demo.dto.MergeRequest;
 import com.example.demo.entity.EventMergeRecord;
 import com.example.demo.service.EventMergeService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -24,10 +23,10 @@ public class EventMergeController {
         this.eventMergeService = eventMergeService;
     }
 
-    @Operation(summary = "Merge events")
+    @Operation(summary = "Merge multiple events into one record")
     @PostMapping
-    public ResponseEntity<EventMergeRecord> mergeEvents(@RequestBody MergeRequest mergeRequest) {
-        return ResponseEntity.ok(eventMergeService.mergeEvents(mergeRequest.getEventIds(), mergeRequest.getReason()));
+    public ResponseEntity<EventMergeRecord> mergeEvents(@RequestBody MergeRequest request) {
+        return ResponseEntity.ok(eventMergeService.mergeEvents(request.getEventIds(), request.getReason()));
     }
 
     @Operation(summary = "Get merge record by ID")
@@ -42,9 +41,10 @@ public class EventMergeController {
         return ResponseEntity.ok(eventMergeService.getAllMergeRecords());
     }
 
-    @Operation(summary = "Get merge records by date range")
+    @Operation(summary = "Get merge records within a date range")
     @GetMapping("/range")
-    public ResponseEntity<List<EventMergeRecord>> getMergeRecordsByDate(@RequestParam LocalDate start, @RequestParam LocalDate end) {
+    public ResponseEntity<List<EventMergeRecord>> getMergeRecordsByDate(@RequestParam LocalDate start,
+                                                                       @RequestParam LocalDate end) {
         return ResponseEntity.ok(eventMergeService.getMergeRecordsByDate(start, end));
     }
 }

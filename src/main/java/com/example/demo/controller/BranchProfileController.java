@@ -4,7 +4,6 @@ package com.example.demo.controller;
 import com.example.demo.entity.BranchProfile;
 import com.example.demo.service.BranchProfileService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,15 +21,16 @@ public class BranchProfileController {
         this.branchProfileService = branchProfileService;
     }
 
-    @Operation(summary = "Create a branch profile")
+    @Operation(summary = "Create a new branch profile")
     @PostMapping
     public ResponseEntity<BranchProfile> createBranch(@RequestBody BranchProfile branch) {
         return ResponseEntity.ok(branchProfileService.createBranch(branch));
     }
 
-    @Operation(summary = "Update branch status")
+    @Operation(summary = "Update branch active status")
     @PutMapping("/{id}/status")
-    public ResponseEntity<BranchProfile> updateBranchStatus(@PathVariable Long id, @RequestParam boolean active) {
+    public ResponseEntity<BranchProfile> updateBranchStatus(@PathVariable Long id,
+                                                            @RequestParam boolean active) {
         return ResponseEntity.ok(branchProfileService.updateBranchStatus(id, active));
     }
 
@@ -46,7 +46,7 @@ public class BranchProfileController {
         return ResponseEntity.ok(branchProfileService.getAllBranches());
     }
 
-    @Operation(summary = "Find branch by code")
+    @Operation(summary = "Lookup branch by branchCode")
     @GetMapping("/lookup/{branchCode}")
     public ResponseEntity<BranchProfile> findByBranchCode(@PathVariable String branchCode) {
         return ResponseEntity.ok(branchProfileService.findByBranchCode(branchCode));
