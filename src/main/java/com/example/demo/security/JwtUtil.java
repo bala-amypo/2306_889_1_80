@@ -1,62 +1,56 @@
 package com.example.demo.security;
 
-import com.example.demo.entity.UserAccount;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
-
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.Map;
+import com.example.demo.entity.UserAccount;
 
 @Component
 public class JwtUtil {
+    private SecretKey secretKey;
+    private final long expirationMillis;
     
-    @Value("${jwt.secret:mySecretKey}")
-    private String secretKey = "mySecretKey";
-    
-    @Value("${jwt.expiration:86400000}")
-    private long expirationMillis = 86400000;
-    
-    private SecretKey key;
+    public JwtUtil(@Value("${jwt.secret:defaultSecretKey}") String secret, 
+                   @Value("${jwt.expiration:86400000}") long expirationMillis) {
+        this.expirationMillis = expirationMillis;
+        initKey();
+    }
     
     public JwtUtil() {
-        // Default constructor for testing
+        this.expirationMillis = 86400000;
+        initKey();
     }
     
     public void initKey() {
-        this.key = Keys.hmacShaKeyFor(secretKey.getBytes());
+        this.secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256);
     }
     
     public String generateToken(Long userId, String email, String role) {
-        if (key == null) initKey();
-        
         return Jwts.builder()
                 .claim("userId", userId)
                 .claim("email", email)
                 .claim("role", role)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
-                .signWith(key)
+                .signWith(secretKey)
                 .compact();
     }
     
     public String generateToken(Map<String, Object> claims, String subject) {
-        if (key == null) initKey();
-        
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(subject)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
-                .signWith(key)
+                .signWith(secretKey)
                 .compact();
     }
     
     public String generateTokenForUser(UserAccount user) {
-        if (key == null) initKey();
-        
         return Jwts.builder()
                 .claim("userId", user.getId())
                 .claim("email", user.getEmail())
@@ -64,25 +58,21 @@ public class JwtUtil {
                 .setSubject(user.getEmail())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
-                .signWith(key)
+                .signWith(secretKey)
                 .compact();
     }
     
-    public Claims validateToken(String token) throws JwtException {
-        if (key == null) initKey();
-        
+    public Claims validateToken(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
     }
     
-    public Jws<Claims> parseToken(String token) throws JwtException {
-        if (key == null) initKey();
-        
+    public Jws<Claims> parseToken(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(secretKey)
                 .build()
                 .parseClaimsJws(token);
     }

@@ -37,8 +37,12 @@ public class HarmonizedCalendar {
     }
     
     @PrePersist
-    public void prePersist() {
+    protected void onCreate() {
         generatedAt = LocalDateTime.now();
+    }
+    
+    public void prePersist() {
+        onCreate();
     }
     
     // Getters and Setters

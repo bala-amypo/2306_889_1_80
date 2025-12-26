@@ -36,8 +36,12 @@ public class EventMergeRecord {
     }
     
     @PrePersist
-    public void prePersist() {
+    protected void onCreate() {
         createdAt = LocalDateTime.now();
+    }
+    
+    public void prePersist() {
+        onCreate();
     }
     
     // Getters and Setters
