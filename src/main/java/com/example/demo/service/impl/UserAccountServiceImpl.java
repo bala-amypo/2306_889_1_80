@@ -6,12 +6,10 @@ import com.example.demo.exception.ValidationException;
 import com.example.demo.repository.UserAccountRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 @Service
 public class UserAccountServiceImpl {
-
     private final UserAccountRepository userAccountRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -21,38 +19,17 @@ public class UserAccountServiceImpl {
     }
 
     public UserAccount register(UserAccount user) {
-    
-        if (userAccountRepository.existsByEmail(user.getEmail())) {
-            throw new ValidationException("Email already in use");
-        }
-
-       
-        if (user.getPassword() == null || user.getPassword().length() < 8) {
-            throw new ValidationException("Password must be at least 8 characters");
-        }
-
-     
-        if (user.getRole() == null || user.getRole().isEmpty()) {
-            user.setRole("REVIEWER");
-        }
-
-       
+        if (userAccountRepository.existsByEmail(user.getEmail())) throw new ValidationException("Email already in use");
+        if (user.getPassword() == null || user.getPassword().length() < 8) throw new ValidationException("Password must be at least 8 characters");
+        if (user.getRole() == null) user.setRole("REVIEWER");
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-
         return userAccountRepository.save(user);
     }
-
     public UserAccount findByEmail(String email) {
-        return userAccountRepository.findByEmail(email)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with email: " + email));
+        return userAccountRepository.findByEmail(email).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
-
     public UserAccount getUser(Long id) {
-        return userAccountRepository.findById(id)
-                .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
+        return userAccountRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
-
-    public List<UserAccount> getAllUsers() {
-        return userAccountRepository.findAll();
-    }
+    public List<UserAccount> getAllUsers() { return userAccountRepository.findAll(); }
 }
