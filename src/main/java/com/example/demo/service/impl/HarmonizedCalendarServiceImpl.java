@@ -5,13 +5,11 @@ import com.example.demo.exception.ResourceNotFoundException;
 import com.example.demo.repository.HarmonizedCalendarRepository;
 import com.example.demo.service.HarmonizedCalendarService;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
 import java.util.List;
 
 @Service
 public class HarmonizedCalendarServiceImpl implements HarmonizedCalendarService {
-    
     private final HarmonizedCalendarRepository harmonizedCalendarRepository;
     
     public HarmonizedCalendarServiceImpl(HarmonizedCalendarRepository harmonizedCalendarRepository) {
@@ -24,8 +22,8 @@ public class HarmonizedCalendarServiceImpl implements HarmonizedCalendarService 
         calendar.setTitle(title);
         calendar.setGeneratedBy(generatedBy);
         calendar.setEffectiveFrom(LocalDate.now());
-        calendar.setEffectiveTo(LocalDate.now().plusYears(1));
-        calendar.setEventsJson("[]"); // Empty JSON array as default
+        calendar.setEffectiveTo(LocalDate.now().plusMonths(12));
+        calendar.setEventsJson("[]");
         
         return harmonizedCalendarRepository.save(calendar);
     }
