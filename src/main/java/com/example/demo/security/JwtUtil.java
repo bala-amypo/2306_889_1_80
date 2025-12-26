@@ -15,7 +15,6 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 
-    
     private SecretKey key;
     private final long EXPIRATION = 1000 * 60 * 60 * 10; // 10 hours
 
@@ -24,7 +23,7 @@ public class JwtUtil {
     }
 
     public void initKey() {
-        
+       
         this.key = Keys.secretKeyFor(Jwts.SIG.HS256);
     }
 
@@ -73,9 +72,9 @@ public class JwtUtil {
     public Jws<Claims> parseToken(String token) {
         
         return Jwts.parser()
-                .verifyWith(key) 
+                .verifyWith(key)
                 .build()
-                .parseSignedClaims(token); 
+                .parseSignedClaims(token);
     }
 
     private boolean isTokenExpired(String token) {
