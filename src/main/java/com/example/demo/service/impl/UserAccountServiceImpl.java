@@ -1,4 +1,3 @@
-// src/main/java/com/example/demo/service/impl/UserAccountServiceImpl.java
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.UserAccount;
@@ -13,44 +12,47 @@ import java.util.List;
 
 @Service
 public class UserAccountServiceImpl implements UserAccountService {
-
-    private final UserAccountRepository repository;
-    private final PasswordEncoder encoder;
-
-    public UserAccountServiceImpl(UserAccountRepository repository, PasswordEncoder encoder) {
-        this.repository = repository;
-        this.encoder = encoder;
+    
+    private final UserAccountRepository userAccountRepository;
+    private final PasswordEncoder passwordEncoder;
+    
+    public UserAccountServiceImpl(UserAccountRepository userAccountRepository, PasswordEncoder passwordEncoder) {
+        this.userAccountRepository = userAccountRepository;
+        this.passwordEncoder = passwordEncoder;
     }
-
+    
     @Override
     public UserAccount register(UserAccount user) {
-        if (repository.existsByEmail(user.getEmail())) {
+        if (userAccountRepository.existsByEmail(user.getEmail())) {
             throw new ValidationException("Email already in use");
         }
+        
         if (user.getPassword().length() < 8) {
             throw new ValidationException("Password must be at least 8 characters");
         }
+        
         if (user.getRole() == null) {
             user.setRole("REVIEWER");
         }
-        user.setPassword(encoder.encode(user.getPassword()));
-        return repository.save(user);
+        
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        return userAccountRepository.save(user);
     }
-
+    
     @Override
     public UserAccount findByEmail(String email) {
-        return repository.findByEmail(email)
+        return userAccountRepository.findByEmail(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
-
+    
     @Override
     public UserAccount getUser(Long id) {
-        return repository.findById(id)
+        return userAccountRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found"));
     }
-
+    
     @Override
     public List<UserAccount> getAllUsers() {
-        return repository.findAll();
+        return userAccountRepository.findAll();
     }
 }

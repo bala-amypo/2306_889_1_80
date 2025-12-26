@@ -1,4 +1,3 @@
-// src/main/java/com/example/demo/service/impl/HarmonizedCalendarServiceImpl.java
 package com.example.demo.service.impl;
 
 import com.example.demo.entity.HarmonizedCalendar;
@@ -12,13 +11,13 @@ import java.util.List;
 
 @Service
 public class HarmonizedCalendarServiceImpl implements HarmonizedCalendarService {
-
-    private final HarmonizedCalendarRepository repository;
-
-    public HarmonizedCalendarServiceImpl(HarmonizedCalendarRepository repository) {
-        this.repository = repository;
+    
+    private final HarmonizedCalendarRepository harmonizedCalendarRepository;
+    
+    public HarmonizedCalendarServiceImpl(HarmonizedCalendarRepository harmonizedCalendarRepository) {
+        this.harmonizedCalendarRepository = harmonizedCalendarRepository;
     }
-
+    
     @Override
     public HarmonizedCalendar generateHarmonizedCalendar(String title, String generatedBy) {
         HarmonizedCalendar calendar = new HarmonizedCalendar();
@@ -26,23 +25,24 @@ public class HarmonizedCalendarServiceImpl implements HarmonizedCalendarService 
         calendar.setGeneratedBy(generatedBy);
         calendar.setEffectiveFrom(LocalDate.now());
         calendar.setEffectiveTo(LocalDate.now().plusYears(1));
-        calendar.setEventsJson("[]");
-        return repository.save(calendar);
+        calendar.setEventsJson("[]"); // Empty JSON array as default
+        
+        return harmonizedCalendarRepository.save(calendar);
     }
-
+    
     @Override
     public HarmonizedCalendar getCalendarById(Long id) {
-        return repository.findById(id)
+        return harmonizedCalendarRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Calendar not found"));
     }
-
+    
     @Override
     public List<HarmonizedCalendar> getAllCalendars() {
-        return repository.findAll();
+        return harmonizedCalendarRepository.findAll();
     }
-
+    
     @Override
     public List<HarmonizedCalendar> getCalendarsWithinRange(LocalDate start, LocalDate end) {
-        return repository.findByEffectiveFromLessThanEqualAndEffectiveToGreaterThanEqual(start, end);
+        return harmonizedCalendarRepository.findByEffectiveFromLessThanEqualAndEffectiveToGreaterThanEqual(start, end);
     }
 }
