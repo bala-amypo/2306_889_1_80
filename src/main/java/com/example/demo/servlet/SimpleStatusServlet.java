@@ -7,7 +7,7 @@ import java.io.IOException;
 @WebServlet(urlPatterns = "/simple-status")
 public class SimpleStatusServlet extends HttpServlet {
 
-    
+   
     @Override
     public void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
