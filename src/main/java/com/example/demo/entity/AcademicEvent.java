@@ -42,8 +42,12 @@ public class AcademicEvent {
     }
     
     @PrePersist
-    public void prePersist() {
+    protected void onCreate() {
         submittedAt = LocalDateTime.now();
+    }
+    
+    public void prePersist() {
+        onCreate();
     }
     
     // Getters and Setters

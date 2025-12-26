@@ -33,9 +33,13 @@ public class BranchProfile {
     }
     
     @PrePersist
-    public void prePersist() {
+    protected void onCreate() {
         lastSyncAt = LocalDateTime.now();
         if (active == null) active = true;
+    }
+    
+    public void prePersist() {
+        onCreate();
     }
     
     // Getters and Setters

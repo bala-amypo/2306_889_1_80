@@ -38,9 +38,13 @@ public class ClashRecord {
     }
     
     @PrePersist
-    public void prePersist() {
+    protected void onCreate() {
         detectedAt = LocalDateTime.now();
         if (resolved == null) resolved = false;
+    }
+    
+    public void prePersist() {
+        onCreate();
     }
     
     // Getters and Setters
