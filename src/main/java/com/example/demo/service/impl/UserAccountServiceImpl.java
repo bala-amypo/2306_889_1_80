@@ -4,36 +4,33 @@ import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.UserAccount;
 import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.service.UserAccountService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class UserAccountServiceImpl implements UserAccountService {
 
     private final UserAccountRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserAccountServiceImpl(UserAccountRepository repository) {
+    public UserAccountServiceImpl(UserAccountRepository repository,
+                                  PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
-    public void register(RegisterRequest request) {
+    public UserAccount register(RegisterRequest request) {
         UserAccount user = new UserAccount();
         user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword());
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
         user.setRole("USER");
-        repository.save(user);
+        return repository.save(user);
     }
 
     @Override
-    public List<UserAccount> getAllUsers() {
-        return repository.findAll();
-    }
-
-    @Override
-    public UserAccount getUser(Long id) {
-        return repository.findById(id)
+    public UserAccount findByUsername(String username) {
+        return repository.findByUsername(username)
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }
