@@ -1,5 +1,6 @@
 package com.example.demo.security;
 
+import com.example.demo.entity.UserAccount;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
@@ -12,21 +13,26 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    private Key key; // Removed 'final' to allow initKey() to work
     private final long EXPIRATION = 1000 * 60 * 60 * 10; // 10 hours
 
-    // ================= GENERATE TOKEN (CONTROLLER USE) =================
-    public String generateToken(Long userId, String email, String role) {
+    public JwtUtil() {
+        initKey(); // Initialize in constructor for normal app usage
+    }
 
+    
+    public void initKey() {
+        this.key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+    }
+
+    public String generateToken(Long userId, String email, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("userId", userId);
         claims.put("email", email);
         claims.put("role", role);
-
         return generateToken(claims, email);
     }
 
-    // ================= GENERATE TOKEN (TEST CASE USE) =================
     public String generateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
                 .setClaims(claims)
@@ -37,12 +43,10 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String generateTokenForUser(
-            com.example.demo.entity.UserAccount user) {
+    public String generateTokenForUser(UserAccount user) {
         return generateToken(user.getId(), user.getEmail(), user.getRole());
     }
 
-    // ================= TOKEN EXTRACTION =================
     public String extractEmail(String token) {
         return extractAllClaims(token).getSubject();
     }
@@ -59,7 +63,6 @@ public class JwtUtil {
         return extractAllClaims(token).get("userId", Long.class);
     }
 
-    // ================= VALIDATION =================
     public boolean isTokenValid(String token, String email) {
         return extractEmail(token).equals(email) && !isTokenExpired(token);
     }
