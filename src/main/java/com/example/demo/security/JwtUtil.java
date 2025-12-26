@@ -5,6 +5,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
+import javax.crypto.SecretKey;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
@@ -13,17 +14,15 @@ import java.util.Map;
 @Component
 public class JwtUtil {
 
-    private Key key;
-    private final long expirationMillis = 3600000; 
+    private SecretKey key;
+    private final long expirationMillis = 3600000; // 1 hour
 
-   
     public void initKey() {
         if (this.key == null) {
-            this.key = Keys.secretKeyFor(SignatureAlgorithm.HS256);
+            this.key = Jwts.SIG.HS256.key().build();
         }
     }
 
-    
     public String generateTokenForUser(UserAccount user) {
         initKey();
         Map<String, Object> claims = new HashMap<>();
@@ -34,7 +33,6 @@ public class JwtUtil {
         return createToken(claims, user.getEmail());
     }
 
-    
     public String generateToken(Map<String, Object> claims, String subject) {
         initKey();
         return createToken(claims, subject);
@@ -42,15 +40,14 @@ public class JwtUtil {
 
     private String createToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
-                .setClaims(claims)
-                .setSubject(subject)
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
+                .claims(claims)
+                .subject(subject)
+                .issuedAt(new Date(System.currentTimeMillis()))
+                .expiration(new Date(System.currentTimeMillis() + expirationMillis))
                 .signWith(key)
                 .compact();
     }
 
-   
     public boolean isTokenValid(String token, String email) {
         try {
             final String username = extractUsername(token);
@@ -60,17 +57,15 @@ public class JwtUtil {
         }
     }
 
-    
     public String extractUsername(String token) {
         return extractAllClaims(token).getSubject();
     }
 
-  
     public Long extractUserId(String token) {
         Number userId = (Number) extractAllClaims(token).get("userId");
         return userId != null ? userId.longValue() : null;
     }
- 
+
     public String extractRole(String token) {
         return (String) extractAllClaims(token).get("role");
     }
@@ -79,13 +74,17 @@ public class JwtUtil {
         return extractAllClaims(token).getExpiration().before(new Date());
     }
 
-  
     public Jws<Claims> parseToken(String token) {
         initKey();
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
+        // UPDATED SYNTAX FOR JJWT 0.12.x
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token);
     }
 
     private Claims extractAllClaims(String token) {
-        return parseToken(token).getBody();
+        
+        return parseToken(token).getPayload();
     }
 }
