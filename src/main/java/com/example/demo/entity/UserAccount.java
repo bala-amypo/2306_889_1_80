@@ -25,7 +25,7 @@ public class UserAccount {
         if (role == null) role = "USER";
     }
 
-    // ✅ REQUIRED getters/setters
+   
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
