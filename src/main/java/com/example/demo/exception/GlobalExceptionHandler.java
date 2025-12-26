@@ -1,5 +1,4 @@
 package com.example.demo.exception;
-
 import com.example.demo.dto.ApiResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,25 +7,12 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
     @ExceptionHandler(ValidationException.class)
     public ResponseEntity<ApiResponse> handleValidationException(ValidationException ex) {
-        ApiResponse response = new ApiResponse(false, ex.getMessage(), null);
-      
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(new ApiResponse(false, ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
-
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiResponse> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        ApiResponse response = new ApiResponse(false, ex.getMessage(), null);
-        
-        return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiResponse> handleGeneralException(Exception ex) {
-        ApiResponse response = new ApiResponse(false, "An unexpected error occurred: " + ex.getMessage(), null);
-       
-        return new ResponseEntity<>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        return new ResponseEntity<>(new ApiResponse(false, ex.getMessage()), HttpStatus.NOT_FOUND);
     }
 }

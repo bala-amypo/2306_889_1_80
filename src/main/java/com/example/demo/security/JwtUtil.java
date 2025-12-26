@@ -1,12 +1,10 @@
+// JwtUtil.java
 package com.example.demo.security;
 
 import com.example.demo.entity.UserAccount;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
-
 import javax.crypto.SecretKey;
-import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -15,11 +13,11 @@ import java.util.Map;
 public class JwtUtil {
 
     private SecretKey key;
-    private final long expirationMillis = 3600000; // 1 hour
+    private final long expirationMillis = 3600000;
 
     public void initKey() {
         if (this.key == null) {
-            this.key = Jwts.SIG.HS256.key().build();
+            this.key = Jwts.SIG.HS256.key().build(); // New syntax
         }
     }
 
@@ -29,7 +27,6 @@ public class JwtUtil {
         claims.put("userId", user.getId());
         claims.put("email", user.getEmail());
         claims.put("role", user.getRole());
-
         return createToken(claims, user.getEmail());
     }
 
@@ -52,9 +49,7 @@ public class JwtUtil {
         try {
             final String username = extractUsername(token);
             return (username.equals(email) && !isTokenExpired(token));
-        } catch (JwtException e) {
-            return false;
-        }
+        } catch (JwtException e) { return false; }
     }
 
     public String extractUsername(String token) {
@@ -76,15 +71,10 @@ public class JwtUtil {
 
     public Jws<Claims> parseToken(String token) {
         initKey();
-        // UPDATED SYNTAX FOR JJWT 0.12.x
-        return Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token);
+        return Jwts.parser().verifyWith(key).build().parseSignedClaims(token); // New syntax
     }
 
     private Claims extractAllClaims(String token) {
-        
-        return parseToken(token).getPayload();
+        return parseToken(token).getPayload(); // New syntax
     }
 }
