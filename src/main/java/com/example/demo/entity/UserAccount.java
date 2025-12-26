@@ -16,8 +16,8 @@ public class UserAccount {
     private String password;
     private String role;
     private String department;
-
-    private LocalDateTime createdAt;
+    
+    private LocalDateTime createdAt; 
 
     public UserAccount() {}
 
@@ -32,7 +32,7 @@ public class UserAccount {
         this.createdAt = createdAt;
     }
 
-
+    
     @PrePersist
     public void prePersist() {
         if (createdAt == null) {
@@ -43,7 +43,8 @@ public class UserAccount {
         }
     }
 
-   
+    // Getters and Setters
+
     public Long getId() {
         return id;
     }
