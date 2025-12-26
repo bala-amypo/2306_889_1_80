@@ -16,14 +16,14 @@ import java.util.Map;
 public class JwtUtil {
 
     private SecretKey key;
-    private final long EXPIRATION = 1000 * 60 * 60 * 10; // 10 hours
+    private final long EXPIRATION = 1000 * 60 * 60 * 10; 
 
     public JwtUtil() {
         initKey();
     }
 
     public void initKey() {
-        // This method strictly requires the 0.12.3 version of 'Keys' class
+       
         this.key = Keys.secretKeyFor(Jwts.SIG.HS256);
     }
 
