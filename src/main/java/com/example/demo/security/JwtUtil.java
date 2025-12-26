@@ -4,7 +4,6 @@ import com.example.demo.entity.UserAccount;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
 
 import javax.crypto.SecretKey;
@@ -23,8 +22,8 @@ public class JwtUtil {
     }
 
     public void initKey() {
-        
-        this.key = Keys.secretKeyFor(Jwts.SIG.HS256);
+       
+        this.key = Jwts.SIG.HS256.key().build();
     }
 
     public String generateToken(Long userId, String email, String role) {
