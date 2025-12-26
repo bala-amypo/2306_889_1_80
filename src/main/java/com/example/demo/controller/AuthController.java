@@ -1,103 +1,80 @@
-package com.example.demo.entity;
+package com.example.demo.controller;
 
-import jakarta.persistence.*;
-import java.time.LocalDateTime;
+import com.example.demo.dto.ApiResponse;
+import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.RegisterRequest;
+import com.example.demo.entity.UserAccount;
+import com.example.demo.security.JwtUtil;
+import com.example.demo.service.UserAccountService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
 
-@Entity
-@Table(name = "user_accounts")
-public class UserAccount {
+import java.util.HashMap;
+import java.util.Map;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-    private String fullName;   
+@RestController
+@RequestMapping("/auth")
+@Tag(name = "Authentication", description = "Authentication APIs")
+public class AuthController {
 
-    @Column(unique = true, nullable = false)
-    private String email;
+    private final UserAccountService userAccountService;
+    private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
 
-    private String password;
-
-    private String role;
-
-    private String department;
-
-    private LocalDateTime createdAt;
-
-    public UserAccount() {}
-
-    public UserAccount(Long id, String fullName, String email,
-                       String password, String role,
-                       String department, LocalDateTime createdAt) {
-        this.id = id;
-        this.fullName = fullName;
-        this.email = email;
-        this.password = password;
-        this.role = role;
-        this.department = department;
-        this.createdAt = createdAt;
+    public AuthController(UserAccountService userAccountService,
+                          JwtUtil jwtUtil,
+                          PasswordEncoder passwordEncoder) {
+        this.userAccountService = userAccountService;
+        this.jwtUtil = jwtUtil;
+        this.passwordEncoder = passwordEncoder;
     }
 
-    @PrePersist
-    public void prePersist() {
-        if (this.createdAt == null) {
-            this.createdAt = LocalDateTime.now();
+    @PostMapping("/register")
+    @Operation(summary = "Register new user")
+    public ResponseEntity<ApiResponse> register(
+            @RequestBody RegisterRequest request) {
+
+        UserAccount user = new UserAccount();
+        user.setFullName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        user.setRole(request.getRole());
+        user.setDepartment(request.getDepartment());
+
+        UserAccount savedUser = userAccountService.register(user);
+
+        return ResponseEntity.ok(
+                new ApiResponse(true, "User registered successfully", savedUser)
+        );
+    }
+
+    @PostMapping("/login")
+    @Operation(summary = "User login")
+    public ResponseEntity<ApiResponse> login(
+            @RequestBody LoginRequest request) {
+
+        UserAccount user = userAccountService.findByEmail(request.getEmail());
+
+        if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            return ResponseEntity.badRequest()
+                    .body(new ApiResponse(false, "Invalid email or password"));
         }
-        if (this.role == null) {
-            this.role = "REVIEWER";  
-        }
-    }
 
-    // ================= GETTERS & SETTERS =================
+        String token = jwtUtil.generateToken(
+                user.getId(),
+                user.getEmail(),
+                user.getRole()
+        );
 
-    public Long getId() {
-        return id;
-    }
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("user", user);
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getFullName() {      
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {   
-        this.fullName = fullName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(String department) {
-        this.department = department;
-    }
-
-    public LocalDateTime getCreatedAt() {
-        return createdAt;
+        return ResponseEntity.ok(
+                new ApiResponse(true, "Login successful", response)
+        );
     }
 }
