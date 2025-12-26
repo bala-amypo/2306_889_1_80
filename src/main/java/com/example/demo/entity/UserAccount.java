@@ -17,7 +17,7 @@ public class UserAccount {
     private String role;
     private String department;
     
-   
+    
     private LocalDateTime createdAt;
 
     public UserAccount() {}
@@ -44,11 +44,8 @@ public class UserAccount {
         }
     }
 
-    // Getters and Setters
     public Long getId() { return id; }
-    
-   
-    public void setId(Long id) { this.id = id; }
+    public void setId(Long id) { this.id = id; } 
 
     public String getFullName() { return fullName; }
     public void setFullName(String fullName) { this.fullName = fullName; }
@@ -65,7 +62,6 @@ public class UserAccount {
     public String getDepartment() { return department; }
     public void setDepartment(String department) { this.department = department; }
 
-   
-    public LocalDateTime getCreatedAt() { return createdAt; }
+    public LocalDateTime getCreatedAt() { return createdAt; } 
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
 }
