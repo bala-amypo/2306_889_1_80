@@ -1,36 +1,77 @@
-// src/main/java/com/example/demo/controller/UserAccountController.java
 package com.example.demo.controller;
 
 import com.example.demo.dto.ApiResponse;
+import com.example.demo.dto.LoginRequest;
+import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.UserAccount;
+import com.example.demo.security.JwtUtil;
 import com.example.demo.service.UserAccountService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@Tag(name = "User Accounts")
 @RestController
-@RequestMapping("/auth/users")
+@RequestMapping("/auth")
+@Tag(name = "Authentication")
 public class UserAccountController {
-
-    private final UserAccountService service;
-
-    public UserAccountController(UserAccountService service) {
-        this.service = service;
+    
+    private final UserAccountService userAccountService;
+    private final JwtUtil jwtUtil;
+    private final PasswordEncoder passwordEncoder;
+    
+    public UserAccountController(UserAccountService userAccountService, JwtUtil jwtUtil, PasswordEncoder passwordEncoder) {
+        this.userAccountService = userAccountService;
+        this.jwtUtil = jwtUtil;
+        this.passwordEncoder = passwordEncoder;
     }
-
+    
+    @PostMapping("/register")
+    @Operation(summary = "Register new user")
+    public ResponseEntity<ApiResponse> register(@RequestBody RegisterRequest request) {
+        UserAccount user = new UserAccount();
+        user.setFullName(request.getName());
+        user.setEmail(request.getEmail());
+        user.setPassword(request.getPassword());
+        user.setRole(request.getRole());
+        user.setDepartment(request.getDepartment());
+        
+        UserAccount createdUser = userAccountService.register(user);
+        return ResponseEntity.ok(new ApiResponse(true, "User registered successfully", createdUser));
+    }
+    
+    @PostMapping("/login")
+    @Operation(summary = "Login user")
+    public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest request) {
+        UserAccount user = userAccountService.findByEmail(request.getEmail());
+        
+        if (passwordEncoder.matches(request.getPassword(), user.getPassword())) {
+            String token = jwtUtil.generateToken(user.getId(), user.getEmail(), user.getRole());
+            
+            Map<String, Object> response = new HashMap<>();
+            response.put("token", token);
+            response.put("user", user);
+            
+            return ResponseEntity.ok(new ApiResponse(true, "Login successful", response));
+        }
+        
+        return ResponseEntity.badRequest().body(new ApiResponse(false, "Invalid credentials"));
+    }
+    
+    @GetMapping("/users")
     @Operation(summary = "Get all users")
-    @GetMapping
-    public ResponseEntity<List<UserAccount>> getAll() {
-        return ResponseEntity.ok(service.getAllUsers());
+    public ResponseEntity<List<UserAccount>> getAllUsers() {
+        return ResponseEntity.ok(userAccountService.getAllUsers());
     }
-
+    
+    @GetMapping("/users/{id}")
     @Operation(summary = "Get user by ID")
-    @GetMapping("/{id}")
-    public ResponseEntity<UserAccount> getById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getUser(id));
+    public ResponseEntity<UserAccount> getUser(@PathVariable Long id) {
+        return ResponseEntity.ok(userAccountService.getUser(id));
     }
 }
