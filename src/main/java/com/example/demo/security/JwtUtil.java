@@ -23,7 +23,7 @@ public class JwtUtil {
     }
 
     public void initKey() {
-       
+        // This method strictly requires the 0.12.3 version of 'Keys' class
         this.key = Keys.secretKeyFor(Jwts.SIG.HS256);
     }
 
@@ -70,7 +70,6 @@ public class JwtUtil {
     }
 
     public Jws<Claims> parseToken(String token) {
-        
         return Jwts.parser()
                 .verifyWith(key)
                 .build()
@@ -84,7 +83,6 @@ public class JwtUtil {
     }
 
     private Claims extractAllClaims(String token) {
-       
         return parseToken(token).getPayload();
     }
 }
