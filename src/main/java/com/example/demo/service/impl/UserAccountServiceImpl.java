@@ -1,11 +1,9 @@
 package com.example.demo.service.impl;
 
+import com.example.demo.dto.RegisterRequest;
 import com.example.demo.entity.UserAccount;
 import com.example.demo.repository.UserAccountRepository;
 import com.example.demo.service.UserAccountService;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -20,40 +18,22 @@ public class UserAccountServiceImpl implements UserAccountService {
     }
 
     @Override
-    public UserAccount register(UserAccount user) {
-        return repository.save(user);
+    public void register(RegisterRequest request) {
+        UserAccount user = new UserAccount();
+        user.setUsername(request.getUsername());
+        user.setPassword(request.getPassword());
+        user.setRole("USER");
+        repository.save(user);
     }
 
-    @Override
-    public UserAccount findByEmail(String email) {
-        return repository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
-
-    // ✅ FIX #1
     @Override
     public List<UserAccount> getAllUsers() {
         return repository.findAll();
     }
 
-    // ✅ FIX #2
     @Override
     public UserAccount getUser(Long id) {
         return repository.findById(id)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-    }
-
-    // 🔐 Spring Security
-    @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-
-        UserAccount user = repository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        return User.builder()
-                .username(user.getEmail())
-                .password(user.getPassword())
-                .roles(user.getRole())
-                .build();
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 }
