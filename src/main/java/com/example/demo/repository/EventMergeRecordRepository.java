@@ -10,6 +10,6 @@ import java.util.List;
 @Repository
 public interface EventMergeRecordRepository extends JpaRepository<EventMergeRecord, Long> {
     
-    // Find merge records where the merged event starts within a date range
+   
     List<EventMergeRecord> findByMergedStartDateBetween(LocalDate start, LocalDate end);
 }

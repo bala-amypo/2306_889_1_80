@@ -34,14 +34,14 @@ public class UserAccount {
     }
 
     @PrePersist
-    public void prePersist() { // MUST BE PUBLIC FOR TESTS
+    public void prePersist() { 
         this.createdAt = LocalDateTime.now();
         if (this.role == null) {
             this.role = "REVIEWER";
         }
     }
 
-    // Getters and Setters
+   
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getFullName() { return fullName; }

@@ -49,7 +49,7 @@ public class UserAccountController {
     @Operation(summary = "Login and receive JWT")
     public ResponseEntity<ApiResponse> login(@RequestBody LoginRequest request) {
        
-        UserAccount user = userAccountService.findByEmail(request.getEmail()); // Will throw ResourceNotFound if missing
+        UserAccount user = userAccountService.findByEmail(request.getEmail()); 
 
      
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword())) {
