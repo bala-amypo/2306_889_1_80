@@ -1,4 +1,5 @@
 package com.example.demo.entity;
+
 import jakarta.persistence.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -6,8 +7,11 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "event_merge_records")
 public class EventMergeRecord {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String sourceEventIds;
     private String mergedTitle;
     private LocalDate mergedStartDate;
@@ -16,15 +20,23 @@ public class EventMergeRecord {
     private LocalDateTime createdAt;
 
     public EventMergeRecord() {}
+
     public EventMergeRecord(Long id, String sourceEventIds, String mergedTitle, LocalDate mergedStartDate, LocalDate mergedEndDate, String mergeReason, LocalDateTime createdAt) {
-        this.id = id; this.sourceEventIds = sourceEventIds; this.mergedTitle = mergedTitle; this.mergedStartDate = mergedStartDate; this.mergedEndDate = mergedEndDate; this.mergeReason = mergeReason; this.createdAt = createdAt;
+        this.id = id;
+        this.sourceEventIds = sourceEventIds;
+        this.mergedTitle = mergedTitle;
+        this.mergedStartDate = mergedStartDate;
+        this.mergedEndDate = mergedEndDate;
+        this.mergeReason = mergeReason;
+        this.createdAt = createdAt;
     }
 
     @PrePersist
-    public void prePersist() { // CHANGED TO PUBLIC
+    public void prePersist() { // MUST BE PUBLIC FOR TESTS
         this.createdAt = LocalDateTime.now();
     }
-   
+
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getSourceEventIds() { return sourceEventIds; }

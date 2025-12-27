@@ -1,38 +1,47 @@
 package com.example.demo.entity;
+
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "user_accounts")
 public class UserAccount {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String fullName;
-    @Column(unique = true, nullable = false) private String email;
+    
+    @Column(unique = true, nullable = false)
+    private String email;
+    
     private String password;
     private String role;
     private String department;
     private LocalDateTime createdAt;
 
     public UserAccount() {}
+
     public UserAccount(Long id, String fullName, String email, String password, String role, String department, LocalDateTime createdAt) {
-        this.id = id; this.fullName = fullName; this.email = email; this.password = password; this.role = role; this.department = department; this.createdAt = createdAt;
+        this.id = id;
+        this.fullName = fullName;
+        this.email = email;
+        this.password = password;
+        this.role = role;
+        this.department = department;
+        this.createdAt = createdAt;
     }
 
     @PrePersist
-    public void prePersist() { 
+    public void prePersist() { // MUST BE PUBLIC FOR TESTS
         this.createdAt = LocalDateTime.now();
-        if (this.role == null) this.role = "REVIEWER";
+        if (this.role == null) {
+            this.role = "REVIEWER";
+        }
     }
-    // ... imports ...
-public class UserAccount {
-    // ... code ...
-    @PrePersist
-    public void prePersist() { // CHANGE THIS TO PUBLIC
-        this.createdAt = LocalDateTime.now();
-        if (this.role == null) this.role = "REVIEWER";
-    }
-}
+
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getFullName() { return fullName; }

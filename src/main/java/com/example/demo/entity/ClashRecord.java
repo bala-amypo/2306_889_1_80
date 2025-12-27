@@ -1,12 +1,16 @@
 package com.example.demo.entity;
+
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "clash_records")
 public class ClashRecord {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private Long eventAId;
     private Long eventBId;
     private String clashType;
@@ -16,16 +20,27 @@ public class ClashRecord {
     private Boolean resolved;
 
     public ClashRecord() {}
+
     public ClashRecord(Long id, Long eventAId, Long eventBId, String clashType, String severity, String details, LocalDateTime detectedAt, Boolean resolved) {
-        this.id = id; this.eventAId = eventAId; this.eventBId = eventBId; this.clashType = clashType; this.severity = severity; this.details = details; this.detectedAt = detectedAt; this.resolved = resolved;
+        this.id = id;
+        this.eventAId = eventAId;
+        this.eventBId = eventBId;
+        this.clashType = clashType;
+        this.severity = severity;
+        this.details = details;
+        this.detectedAt = detectedAt;
+        this.resolved = resolved;
     }
 
     @PrePersist
-    public void prePersist() { // CHANGED TO PUBLIC
+    public void prePersist() { // MUST BE PUBLIC FOR TESTS
         this.detectedAt = LocalDateTime.now();
-        if (this.resolved == null) this.resolved = false;
+        if (this.resolved == null) {
+            this.resolved = false;
+        }
     }
-  
+
+    // Getters and Setters
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public Long getEventAId() { return eventAId; }
