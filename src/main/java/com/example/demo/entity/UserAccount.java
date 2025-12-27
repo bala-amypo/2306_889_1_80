@@ -24,7 +24,15 @@ public class UserAccount {
         this.createdAt = LocalDateTime.now();
         if (this.role == null) this.role = "REVIEWER";
     }
-   
+    // ... imports ...
+public class UserAccount {
+    // ... code ...
+    @PrePersist
+    public void prePersist() { // CHANGE THIS TO PUBLIC
+        this.createdAt = LocalDateTime.now();
+        if (this.role == null) this.role = "REVIEWER";
+    }
+}
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getFullName() { return fullName; }

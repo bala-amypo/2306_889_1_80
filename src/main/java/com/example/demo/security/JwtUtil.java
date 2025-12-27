@@ -17,7 +17,7 @@ public class JwtUtil {
 
     public void initKey() {
         if (this.key == null) {
-            // New syntax for generating keys in 0.12.x
+            // New syntax for 0.12.6
             this.key = Jwts.SIG.HS256.key().build();
         }
     }
@@ -50,9 +50,7 @@ public class JwtUtil {
         try {
             final String username = extractUsername(token);
             return (username.equals(email) && !isTokenExpired(token));
-        } catch (JwtException e) {
-            return false;
-        }
+        } catch (JwtException e) { return false; }
     }
 
     public String extractUsername(String token) {
@@ -74,15 +72,12 @@ public class JwtUtil {
 
     public Jws<Claims> parseToken(String token) {
         initKey();
-        // Updated parser syntax for 0.12.x
-        return Jwts.parser()
-                .verifyWith(key)
-                .build()
-                .parseSignedClaims(token);
+        // New syntax for 0.12.6
+        return Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
     }
 
     private Claims extractAllClaims(String token) {
-        // Correct method for 0.12.x
+        // New syntax for 0.12.6
         return parseToken(token).getPayload();
     }
 }
