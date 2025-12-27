@@ -72,12 +72,12 @@ public class JwtUtil {
 
     public Jws<Claims> parseToken(String token) {
         initKey();
-        // New syntax for 0.12.6
+       
         return Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
     }
 
     private Claims extractAllClaims(String token) {
-        // New syntax for 0.12.6
+       
         return parseToken(token).getPayload();
     }
 }

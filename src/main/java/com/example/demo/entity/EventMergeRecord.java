@@ -32,11 +32,11 @@ public class EventMergeRecord {
     }
 
     @PrePersist
-    public void prePersist() { // MUST BE PUBLIC FOR TESTS
+    public void prePersist() { 
         this.createdAt = LocalDateTime.now();
     }
 
-    // Getters and Setters
+   
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
     public String getSourceEventIds() { return sourceEventIds; }
