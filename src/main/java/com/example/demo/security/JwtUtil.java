@@ -1,9 +1,9 @@
-// JwtUtil.java
 package com.example.demo.security;
 
 import com.example.demo.entity.UserAccount;
 import io.jsonwebtoken.*;
 import org.springframework.stereotype.Component;
+
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
@@ -17,7 +17,8 @@ public class JwtUtil {
 
     public void initKey() {
         if (this.key == null) {
-            this.key = Jwts.SIG.HS256.key().build(); // New syntax
+            // New syntax for generating keys in 0.12.x
+            this.key = Jwts.SIG.HS256.key().build();
         }
     }
 
@@ -49,7 +50,9 @@ public class JwtUtil {
         try {
             final String username = extractUsername(token);
             return (username.equals(email) && !isTokenExpired(token));
-        } catch (JwtException e) { return false; }
+        } catch (JwtException e) {
+            return false;
+        }
     }
 
     public String extractUsername(String token) {
@@ -71,10 +74,15 @@ public class JwtUtil {
 
     public Jws<Claims> parseToken(String token) {
         initKey();
-        return Jwts.parser().verifyWith(key).build().parseSignedClaims(token); // New syntax
+        // Updated parser syntax for 0.12.x
+        return Jwts.parser()
+                .verifyWith(key)
+                .build()
+                .parseSignedClaims(token);
     }
 
     private Claims extractAllClaims(String token) {
-        return parseToken(token).getPayload(); // New syntax
+        // Correct method for 0.12.x
+        return parseToken(token).getPayload();
     }
 }
